@@ -14,27 +14,19 @@ class PromptSaver:
         """
 
         if model_name == "llama chat":
-            fileName = "responsesLlamaChat.json"
+            fileName = "responsesLlamaChat.jsonl"
         elif model_name == "llama":
-            fileName = "responsesLlama.json"
+            fileName = "responsesLlama.jsonl"
         elif model_name == "mistral":
-            fileName = "responsesMistral.json"
+            fileName = "responsesMistral.jsonl"
         else:
             raise ValueError("Unsupported model name. Please choose from: Llama Chat, Llama, Mistral.")
 
         file_path = os.path.join(file_path, fileName)
 
         try:
-            with open(file_path, 'r', encoding='utf-8') as file:
-                existing_data = json.load(file)
-        except FileNotFoundError:
-            existing_data = []
-
-        existing_data.append(data)
-
-        try:
-            with open(file_path, 'w', encoding='utf-8') as file:
-                json.dump(data, file, indent=4)
+            with open(file_path, 'a', encoding='utf-8') as file:
+                json_line = json.dumps(data, ensure_ascii=False)
+                file.write(json_line + '\n')
         except Exception as e:
             print(f"An error occurred while saving to {file_path}: {e}")
-        
