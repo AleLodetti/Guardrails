@@ -1,1 +1,3 @@
 TOKEN = "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"
+PATH_TO_RESPONSES = "responses"
+CLASSIFIER_THRESHOLD = 0.7

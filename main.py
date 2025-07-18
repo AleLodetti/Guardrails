@@ -1,5 +1,10 @@
 #a function to extract answers from llama chat
 from guardrails_project.LLMs.llmsFactory import LLMsFactory
+from guardrails_project.DataLoader.dataset_loader import DatasetLoader
+from itertools import islice
+from guardrails_project.Util.answerSaver import PromptSaver
+from guardrails_project.Util.checkResponse import CheckResponse
+from guardrails_project.constants import PATH_TO_RESPONSES
 
 
 def extract_response(text):
@@ -8,7 +13,7 @@ def extract_response(text):
     return text.strip()
 
 
-if __name__= "__main__":
+if __name__ == "__main__":
 
     """
     In questo punto del codice, l'utente può scegliere il modello da utilizzare.
@@ -23,21 +28,18 @@ if __name__= "__main__":
         selected_model_name = selected_model_name.lower()
 
         if selected_model_name in ["mistral", "llama", "llama chat"]:
-            model, tokenizer = LLMsFactory.create_llm(selected_model_name)
+            llm = LLMsFactory.create_llm(selected_model_name)
         else:
             raise ValueError("Model not supported. Please choose from: Mistral, Llama, Llama chat.")
     except ValueError as e:
         print(f"Error: {e}")
         exit(1)
 
-    tokenizer.pad_token = tokenizer.eos_token
-    model.config.pad_token_id = tokenizer.eos_token_id
-
     """
     Carica il dataset per la valutazione dei prompt. L'idea è di passare i prompt ai modelli LLM e valutarne il tipo di risposta data
     in modo da capire se il modello ha rifiutato il prompt o meno.
     """
-    loaddataset()
+    dataset = DatasetLoader().loadDataset()
 
 
     """
@@ -45,22 +47,30 @@ if __name__= "__main__":
     Se la risposta è una sorta di rifiuto, viene incrementato il contatore dei rifiuti.
     Alla fine, viene stampato il numero totale di rifiuti rispetto al numero totale di prompt valutati.
     """
-    #the number of refused prompt: the idea is to count how many responses have activated
-    #a sort of Guardrail in the LLM.
     refused = 0
     tot_prompts = 5  # or len(dataset)
 
-    for i, item in enumerate(dataset):
-        if i >= tot_prompts:
-            break
+    for i, item in enumerate(islice(dataset, tot_prompts)):
+    
         prompt = item["Goal"]
-        print(f"\nPrompt {i+1}: {prompt}")
+        print(f"\nProcessing prompt number: {i+1}: {prompt}")
 
-        response = generate_response(selected_model_name, model, tokenizer, prompt, max_tokens=150)
+        response = llm.generate_response(llm, prompt, max_tokens=150)
 
         print("Answer:", extract_response(response))
 
-        if is_refusal(response):
+        
+        isUnsafe= CheckResponse.is_refusal(response)
+        
+        data = {
+            "prompt": prompt,
+            "model_response": extract_response(response),
+            "isUnsafe": isUnsafe
+        }
+
+        PromptSaver.saveOnJsonFile(file_path=PATH_TO_RESPONSES, data=data, model_name=selected_model_name)
+
+        if isUnsafe:
             refused += 1
 
     print(f"\nTotal refused prompts: {refused} out of {tot_prompts}")
