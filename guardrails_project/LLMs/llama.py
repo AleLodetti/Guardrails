@@ -1,6 +1,10 @@
 from guardrails_project.LLMs.base_llm import BaseLLM
+from guardrails_project.constants import TOKEN
+from transformers import AutoModelForCausalLM, AutoTokenizer
+from transformers import BitsAndBytesConfig
+import torch
 
-class llama(BaseLLM):
+class Llama(BaseLLM):
     """Implementation of the Llama model."""
 
     def __init__(self):
@@ -8,8 +12,9 @@ class llama(BaseLLM):
         # Initialize the Llama model and tokenizer here
         # self.model = ...
         # self.tokenizer = ...
-        self.model = setModel()
-        self.tokenizer = setTokenizer()
+        self.model = self.setModel()
+        self.tokenizer = self.setTokenizer()
+
 
 
     def get_model_info(self) -> dict:
@@ -20,23 +25,42 @@ class llama(BaseLLM):
             "description": "Llama model for generating text responses."
         }
 
-    def generate_response(self, messages: list) -> str:
-        """Generates a response based on a list of messages."""
-        # Placeholder implementation
-        return "Generated response from Llama."
+    def generate_response(self, prompt: str, max_tokens: int = 100) -> str:
+        """Generates a response from the Llama model based on the input messages."""
+
+        chat = [
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": prompt}
+        ]
+
+        prompt = self.tokenizer.apply_chat_template(chat, tokenize=False, add_generation_prompt=True)
+
+        #message = f"User: {prompt}\nAssistant:"
+
+        inputs = self.tokenizer(prompt, return_tensors="pt").to(next(self.model.parameters()).device)
+        with torch.no_grad():
+            outputs = self.model.generate(
+                **inputs,
+                max_new_tokens=max_tokens,
+                do_sample=True,
+                temperature=0.7,
+                top_p=0.9,
+                repetition_penalty=1.2
+            )
+        text = self.tokenizer.decode(outputs[0], skip_special_tokens=True)
+        return text.strip()
 
     def getTokenizer(self):
         """Returns the tokenizer associated with the Llama model."""
-        # Placeholder implementation
-        return "Llama tokenizer"
+        return self.tokenizer
 
     def getModel(self):
         """Returns the model instance."""
-        # Placeholder implementation
-        return "Llama model instance" 
+        return self.model
     
     def setModel():
         """Set the model for Llama."""
+
         MODEL = "meta-llama/Llama-3.1-8B"
         token= "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"
 
@@ -57,10 +81,19 @@ class llama(BaseLLM):
         return model
 
     def setTokenizer(): 
+        """
+        Set the tokenizer for Llama.
+        Initializes the tokenizer with specific configurations such as the model name and token.
+        The tokenizer is loaded from the Hugging Face model hub using the specified model name and token.
+        The tokenizer is set to use the end-of-sequence token as the padding token to suppress warnings.
+
+        Returns:
+            tokenizer: The initialized tokenizer instance.
+        """
         MODEL = "meta-llama/Llama-3.1-8B"
-        token= "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"
+        token= TOKEN
         tokeniser_configs = {'token': token}
         tokenizer = AutoTokenizer.from_pretrained(MODEL, **tokeniser_configs)
-        tokenizer.pad_token = tokenizer_LlamaV2.eos_token  # This is just to suppress a warning
-        tokenizer = padding_side = "left"  # This is just to suppress a warning
+        tokenizer.pad_token = tokenizer.eos_token  # This is just to suppress a warning
+        
         return tokenizer

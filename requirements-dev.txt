@@ -1,0 +1,11 @@
+torch
+transformers
+accelerate
+sentence-transformers
+datasets
+hnswlib
+ipywidgets
+matplotlib
+sentencepiece
+protobuf<6.0.0,>=5.29.1
+pandas

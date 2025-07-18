@@ -1,0 +1,13 @@
+torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+transformers
+accelerate
+bitsandbytes
+auto-gptq
+sentence-transformers
+datasets
+hnswlib
+ipywidgets
+matplotlib
+sentencepiece
+protobuf<6.0.0,>=5.29.1
+pandas

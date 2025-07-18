@@ -1,0 +1,36 @@
+# Ambiente virtuale
+.venv/
+venv/
+env/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribuzioni / pacchetti
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# File di configurazione IDE
+.vscode/
+.idea/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# File di log
+*.log
+
+# File temporanei
+*.tmp
+*.swp
+*.bak
+
+# MacOS
+.DS_Store
+
+# Windows
+Thumbs.db

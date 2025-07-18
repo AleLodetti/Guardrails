@@ -1,9 +1,9 @@
 """sfrutta il factory pattern per creare istanze di modelli LLM."""
 
 
-from guardrails_project.LLMs.llama import llama
-from guardrails_project.LLMs.llama_chat import llama_chat
-from guardrails_project.LLMs.mistral import mistral
+from guardrails_project.LLMs.llama import Llama
+from guardrails_project.LLMs.llama_chat import Llama_chat
+from guardrails_project.LLMs.mistral import Mistral
 
 class LLMsFactory:
 
@@ -11,10 +11,10 @@ class LLMsFactory:
     def create_llm(model_name: str):
         """Creates an instance of the specified LLM model."""
         if model_name == "llama":
-            return llama()
+            return Llama()
         elif model_name == "llama chat":
-            return llama_chat()
+            return Llama_chat()
         elif model_name == "mistral":
-            return mistral()
+            return Mistral()
         else:
             raise ValueError(f"Model {model_name} is not supported.")

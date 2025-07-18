@@ -16,7 +16,7 @@ class BaseLLM(ABC):
         pass
 
     @abstractmethod
-    def generate_response(self, messages: list) -> str:
+    def generate_response(self, prompt: str, max_tokens: int = 200) -> str:
         """Generates a response based on a list of messages."""
         pass
 
