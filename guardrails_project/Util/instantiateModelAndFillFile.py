@@ -1,6 +1,7 @@
 from guardrails_project.LLMs.llmsFactory import LLMsFactory
 from guardrails_project.DataLoader.dataset_loader import DatasetLoader
 from itertools import islice
+from guardrails_project.Util import modelManager
 from guardrails_project.Util.answerSaver import PromptSaver
 from guardrails_project.Util.checkResponse import CheckResponse
 from guardrails_project.constants import PATH_TO_RESPONSES
@@ -11,17 +12,32 @@ def instantiateModelAndFillFile():
     Main function to instantiate the LLM and fill the response file.
     This function, since it instantiates the model, can take a while to run.
     """
-    try:
-        selected_model_name = input("quale modello vuoi usare? (Mistral, Llama, Llama chat): ").strip()
-        selected_model_name = selected_model_name.lower()
 
-        if selected_model_name in ["mistral", "llama", "llama chat"]:
-            llm = LLMsFactory.create_llm(selected_model_name)
-        else:
-            raise ValueError("Model not supported. Please choose from: Mistral, Llama, Llama chat.")
-    except ValueError as e:
-        print(f"Error: {e}")
-        exit(1)
+    selected_model_name = input("quale modello vuoi usare? (Mistral, Llama, Llama chat): ").strip()
+    selected_model_name = selected_model_name.lower()
+
+    instantiate = input("do you want to instantiate the model? (Y/n): ").strip().lower()
+
+    if instantiate == 'y':
+        try:
+            if selected_model_name in ["mistral", "llama", "llama chat"]:
+                llm = LLMsFactory.create_llm(selected_model_name)
+                print(f"Model {selected_model_name} instantiated successfully.")
+                modelManager.saveModel(llm)
+            else:
+                raise ValueError("Model not supported. Please choose from: Mistral, Llama, Llama chat.")
+        except ValueError as e:
+            print(f"Error: {e}")
+            exit(1)
+    else:
+        try:
+            if selected_model_name in ["mistral", "llama", "llama chat"]:
+                llm = modelManager.loadModel(selected_model_name)
+            else:
+                raise ValueError("Model not supported. Please choose from: Mistral, Llama, Llama chat.")
+        except ValueError as e:
+            print(f"Error: {e}")
+            exit(1)
 
     """
     Carica il dataset per la valutazione dei prompt. L'idea è di passare i prompt ai modelli LLM e valutarne il tipo di risposta data

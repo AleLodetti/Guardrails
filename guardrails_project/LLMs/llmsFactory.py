@@ -18,3 +18,15 @@ class LLMsFactory:
             return Mistral()
         else:
             raise ValueError(f"Model {model_name} is not supported.")
+        
+    @staticmethod
+    def create_llm(model_name: str, model=None, tokenizer=None):
+        """Creates an instance of the specified LLM model with custom model and tokenizer."""
+        if model_name == "llama":
+            return Llama(model=model, tokenizer=tokenizer)
+        elif model_name == "llamaChat":
+            return Llama_chat(model=model, tokenizer=tokenizer)
+        elif model_name == "mistral":
+            return Mistral(model=model, tokenizer=tokenizer)
+        else:
+            raise ValueError(f"Model {model_name} is not supported.")

@@ -15,7 +15,11 @@ class Llama(BaseLLM):
         self.model = self.setModel()
         self.tokenizer = self.setTokenizer()
 
-
+    def __init__(self, model=None, tokenizer=None):
+        """Initialize the Mistral model with custom model and tokenizer."""
+        super().__init__()
+        self.model = model
+        self.tokenizer = tokenizer
 
     def get_model_info(self) -> dict:
         """Returns information about the Llama model."""

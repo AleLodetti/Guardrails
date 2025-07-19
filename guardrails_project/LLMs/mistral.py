@@ -15,6 +15,12 @@ class Mistral(BaseLLM):
         self.model = self.set_model()
         self.tokenizer = self.set_tokenizer()
 
+    def __init__(self, model=None, tokenizer=None):
+        """Initialize the Mistral model with custom model and tokenizer."""
+        super().__init__()
+        self.model = model
+        self.tokenizer = tokenizer
+
     def get_model_info(self) -> dict:
         """
         Return information about the Mistral model.

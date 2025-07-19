@@ -34,3 +34,9 @@ dist/
 
 # Windows
 Thumbs.db
+
+#Ignora modelli scaricati
+saved_models/mistral/*
+saved_models/llama/*
+saved_models/llamaChat/*
+saved_models/llamaguard/*
