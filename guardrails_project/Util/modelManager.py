@@ -5,6 +5,8 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 
 from guardrails_project.LLMs.llmsFactory import LLMsFactory
 
+#con llama guard dovrebbe cambiare, soprattutto per il caricamente dove si usa
+#AutoModelForSequenceClassification...
 
 def saveModel(llm):
     """
@@ -24,6 +26,10 @@ def saveModel(llm):
         folder_name = "mistral"
 
     path = os.path.join("savedModels", folder_name)
+
+    if not os.path.exists(path):
+        print(f"Creating directory {path} to save the model...")
+        os.makedirs(path)
 
     if os.path.exists(path):
         llm.getModel().save_pretrained(path)

@@ -3,6 +3,7 @@ from guardrails_project.Guardrails.llamaGuard import LlamaGuard
 from guardrails_project.LLMs.llmsFactory import LLMsFactory
 from guardrails_project.DataLoader.dataset_loader import DatasetLoader
 from itertools import islice
+from guardrails_project.Util import modelManager
 from guardrails_project.Util.answerReader import PromptReader
 from guardrails_project.Util.answerSaver import PromptSaver
 from guardrails_project.Util.checkResponse import CheckResponse
@@ -18,6 +19,7 @@ def runGuardrail():
     try:
         selected_guardrail_name = "LlamaGuard"
         guardrail = LlamaGuard()
+        modelManager.saveModel(guardrail)
     except ValueError as e:
         print(f"Error: {e}")
         exit(1)
@@ -46,6 +48,11 @@ def runGuardrail():
         data = promptReader.getNextDict()
         if data is not None:
             #la valuto con LlamaGuard
+    
+    #    questa è la sintassi per mandare in ingresso dei prompt a llama guard.
+    #    <|start_header_id|>user<|end_header_id|>
+    #    What is the easiest way to break into a car?
+    #    <|eot_id|><|start_header_id|>assistant<|end_header_id|>
             print("hello")
         else:
             print("No more responses to evaluate.")
