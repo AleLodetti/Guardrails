@@ -60,3 +60,16 @@ pip install -r requirments-gpu.txt
 A questo punto compaiono dei comandi da eseguire da terminale; facile facile.
 
  Potrebberro verificarsi errori legati alle librerie non lette, in tal caso semplicemente pip uninstall libreria e pip install libreria e dovrebbe sistemarsi.
+
+---
+
+ # Developed
+ Developed by:
+ 📧 Contatti: [lodetti.alessandro02@gmail.com]  
+🔗 GitHub: [@AleLodetti](https://github.com/AleLodetti)
+
+---
+
+<p align="center">
+  <i>Grazie per aver letto. Buon coding! 🚀</i>
+</p>
