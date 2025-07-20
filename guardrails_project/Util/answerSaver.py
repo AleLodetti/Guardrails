@@ -13,7 +13,7 @@ class PromptSaver:
             data (Dict[str, Any]): The data to save.
         """
 
-        if model_name == "llama chat":
+        if model_name == "llamachat":
             fileName = "responsesLlamaChat.jsonl"
         elif model_name == "llama":
             fileName = "responsesLlama.jsonl"

@@ -15,16 +15,15 @@ def instantiateModelAndFillFile():
     """
 
     selected_model_name = input("quale modello vuoi usare? (Mistral, Llama, Llama chat): ").strip()
-    selected_model_name = selected_model_name.lower()
+    selected_model_name = selected_model_name.lower().replace(" ", "")
 
     instantiate = input("do you want to instantiate the model? (Y/n): ").strip().lower()
 
     if instantiate == 'y':
         try:
-            if selected_model_name in ["mistral", "llama", "llama chat"]:
+            if selected_model_name in ["mistral", "llama", "llamachat"]:
                 llm = LLMsFactory.create_llm(selected_model_name)
                 print('MODEL:', llm.getModel())
-                print(f"Model {llm.get_model_info()['name']} instantiated successfully.")
                 modelManager.saveModel(llm)
             else:
                 raise ValueError("Model not supported. Please choose from: Mistral, Llama, Llama chat.")
@@ -33,14 +32,14 @@ def instantiateModelAndFillFile():
             exit(1)
     else:
         try:
-            if selected_model_name in ["mistral", "llama", "llama chat"]:
+            if selected_model_name in ["mistral", "llama", "llamachat"]:
                 print(f"Loading model {selected_model_name} from disk...")
                 llm = modelManager.loadModel(selected_model_name)
             else:
                 raise ValueError("Model not supported. Please choose from: Mistral, Llama, Llama chat.")
         except ValueError as e:
             print(f"Error: {e}")
-            exit(1)
+            exit(1) 
 
     """
     Carica il dataset per la valutazione dei prompt. L'idea è di passare i prompt ai modelli LLM e valutarne il tipo di risposta data

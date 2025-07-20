@@ -13,12 +13,15 @@ class LLMsFactory:
         if model_name == "llama":
             print("Creating Llama model instance...")
             llm = Llama()
-            print("Llama model instance created.",llm.getModel())
             return llm
-        elif model_name == "llama chat":
-            return Llama_chat()
+        elif model_name == "llamachat":
+            print("Creating Llama Chat model instance...")
+            llm = Llama_chat()
+            return llm
         elif model_name == "mistral":
-            return Mistral()
+            print("creating mistral model instance...")
+            llm = Mistral()
+            return llm
         else:
             raise ValueError(f"Model {model_name} is not supported.")
         

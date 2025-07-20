@@ -51,7 +51,7 @@ def loadModel(model_name):
         The loaded model.
     """
 
-    if model_name.lower() == "llama chat":
+    if model_name.lower() == "llamachat":
         model_name = "llamaChat"
     
     path = os.path.join("savedModels", model_name)

@@ -9,17 +9,15 @@ class Mistral(BaseLLM):
     Args:
         BaseLLM (): Base class for language models.
     """
-    def __init__(self):
+    def __init__(self, model=None, tokenizer=None):
         """Initialize the Mistral model."""
         super().__init__()
-        self.model = self.set_model()
-        self.tokenizer = self.set_tokenizer()
-
-    def __init__(self, model=None, tokenizer=None):
-        """Initialize the Mistral model with custom model and tokenizer."""
-        super().__init__()
-        self.model = model
-        self.tokenizer = tokenizer
+        if model is None and tokenizer is None:
+            self.model = self.setModel()
+            self.tokenizer = self.setTokenizer()
+        elif model is not None and tokenizer is not None:
+            self.model = model
+            self.tokenizer = tokenizer
 
     def get_model_info(self) -> dict:
         """
@@ -58,19 +56,19 @@ class Mistral(BaseLLM):
         return text.strip()
     
     
-    def get_tokenizer(self):
+    def getTokenizer(self):
         """
         Return the tokenizer of the model.
         """
         return self.tokenizer
     
-    def get_model(self):
+    def getModel(self):
         """
         Return the model instance.
         """
         return self.model   
     
-    def setModel():
+    def setModel(self):
         """
         Set the model instance for Mistral.
         Returns:
@@ -94,7 +92,7 @@ class Mistral(BaseLLM):
         return model
     
 
-    def set_tokenizer():
+    def setTokenizer(self):
         """
         Set the tokenizer instance.
         Returns:

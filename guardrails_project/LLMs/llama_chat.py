@@ -2,21 +2,20 @@ from guardrails_project.LLMs.base_llm import BaseLLM
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from transformers import BitsAndBytesConfig    
 from sentence_transformers import SentenceTransformer, util
+from guardrails_project.constants import TOKEN
 import torch
 
 class Llama_chat(BaseLLM):
     """Implementation of the Llama chat model."""
 
-    def __init__(self):
-        super().__init__()
-        self.model = self.setModel()
-        self.tokenizer = self.setTokenizer()
-
     def __init__(self, model=None, tokenizer=None):
-        """Initialize the Mistral model with custom model and tokenizer."""
         super().__init__()
-        self.model = model
-        self.tokenizer = tokenizer
+        if model is None and tokenizer is None:
+            self.model = self.setModel()
+            self.tokenizer = self.setTokenizer()
+        elif model is not None and tokenizer is not None:
+            self.model = model
+            self.tokenizer = tokenizer
 
     def get_model_info(self) -> dict:
         """
@@ -86,10 +85,10 @@ class Llama_chat(BaseLLM):
         The function returns the initialized model instance.
         """
 
-        MODEL = "meta-llama/Llama-3.1-8B"
-        token= "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"
+        MODEL = "meta-llama/Llama-2-7b-chat-hf"
+        token= TOKEN
         
-        model_config = {
+        model_configs = {
             'torch_dtype': torch.bfloat16,
             'device_map': 'auto',
             'use_auth_token': token,
@@ -101,7 +100,7 @@ class Llama_chat(BaseLLM):
             )
         }
 
-        model = AutoModelForCausalLM.from_pretrained(MODEL, **model_config)
+        model = AutoModelForCausalLM.from_pretrained(MODEL, **model_configs)
         return model
     
 
@@ -113,8 +112,8 @@ class Llama_chat(BaseLLM):
         The function returns the initialized tokenizer instance.
         """
 
-        MODEL = "meta-llama/Llama-3.1-8B"
-        token= "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"
+        MODEL = "meta-llama/Llama-2-7b-chat-hf"
+        token= TOKEN
 
         tokeniser_configs = {'token': token}
         tokenizer = AutoTokenizer.from_pretrained(MODEL, **tokeniser_configs)
