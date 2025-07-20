@@ -28,7 +28,7 @@ git clone https://github.com/AleLodetti/Guardrails/tree/main/guardrails_project
 cd tuo-repo
 ```
 
-### <img src="https://www.python.org/static/community_logos/python-logo.png" alt="python logo" width="20"/> Python 
+### <img src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" alt="Python Logo" width="20"/> Python 
 Io utilizzo Python 3.11 (l'utlima versione forse non va). Per installare Python vai su https://www.python.org/downloads/ e durante l'installazione SPUNTA "add python to Path" (subito all'inizio) ed installa anche pip. Per verificare
 ```bash
 python --version (o py --version)
