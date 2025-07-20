@@ -18,6 +18,7 @@ Questo progetto mira a comprendere quando siano rischiosi gli LLM senza un fine 
 
 ## 📦 Installazione
 Per poter funzionare necessità di una GPU Nvidia, se non ce l'hai problema tuo. 
+Qui è descritta l'installazione su Windows (su linux è analoga, dovrebbe cambiare solo la parte legata a Microsoft C++ Build Tools).
 Superato questo enorme scoglio, servono: Git, Python e Microsoft C++ Build Tools
 
 ### Git
@@ -56,5 +57,6 @@ pip install -r requirments-gpu.txt
  ```bash
  python -m main
  ```
+A questo punto compaiono dei comandi da eseguire da terminale; facile facile.
 
  Potrebberro verificarsi errori legati alle librerie non lette, in tal caso semplicemente pip uninstall libreria e pip install libreria e dovrebbe sistemarsi.
