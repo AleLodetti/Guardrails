@@ -1,7 +1,7 @@
 from guardrails_project.LLMs.base_llm import BaseLLM
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from transformers import BitsAndBytesConfig    
-from transformers import SentenceTransformer, util
+from sentence_transformers import SentenceTransformer, util
 import torch
 
 class Llama_chat(BaseLLM):

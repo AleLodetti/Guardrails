@@ -15,7 +15,7 @@ def saveModel(llm):
     Args:
         model: The model to save.
     """
-    name = llm.getModelInfo()['name']
+    name = llm.get_model_info()['name']
     if name == "LlamaGuard":
         folder_name = "llamaguard"
     elif name == "Llama":
@@ -59,7 +59,7 @@ def loadModel(model_name):
     try:
         model = AutoModelForCausalLM.from_pretrained(path)
         tokenizer = AutoTokenizer.from_pretrained(path)
-        llm = LLMsFactory.create_llm(model_name, model=model, tokenizer=tokenizer)
+        llm = LLMsFactory.create_llm_custom(model_name, model=model, tokenizer=tokenizer)
         print(f"Model {model_name} loaded successfully.")
         return llm
     except ValueError as e:

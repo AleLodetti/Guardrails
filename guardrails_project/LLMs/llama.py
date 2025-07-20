@@ -6,20 +6,15 @@ import torch
 
 class Llama(BaseLLM):
     """Implementation of the Llama model."""
-
-    def __init__(self):
+    def __init__(self, model = None, tokenizer = None ):
         super().__init__()
-        # Initialize the Llama model and tokenizer here
-        # self.model = ...
-        # self.tokenizer = ...
-        self.model = self.setModel()
-        self.tokenizer = self.setTokenizer()
-
-    def __init__(self, model=None, tokenizer=None):
-        """Initialize the Mistral model with custom model and tokenizer."""
-        super().__init__()
-        self.model = model
-        self.tokenizer = tokenizer
+        print("Initializing Llama model...")
+        if model is None and tokenizer is None:
+            self.model = self.setModel()
+            self.tokenizer = self.setTokenizer()
+        elif model is not None and tokenizer is not None:
+            self.model = model
+            self.tokenizer = tokenizer
 
     def get_model_info(self) -> dict:
         """Returns information about the Llama model."""
@@ -31,13 +26,6 @@ class Llama(BaseLLM):
 
     def generate_response(self, prompt: str, max_tokens: int = 100) -> str:
         """Generates a response from the Llama model based on the input messages."""
-
-        chat = [
-        {"role": "system", "content": "You are a helpful assistant."},
-        {"role": "user", "content": prompt}
-        ]
-
-        prompt = self.tokenizer.apply_chat_template(chat, tokenize=False, add_generation_prompt=True)
 
         #message = f"User: {prompt}\nAssistant:"
 
@@ -62,29 +50,32 @@ class Llama(BaseLLM):
         """Returns the model instance."""
         return self.model
     
-    def setModel():
+    def setModel(self):
         """Set the model for Llama."""
+        print("Loading Llama model...")
+        try:
+            MODEL = "meta-llama/Llama-3.1-8B"
+            token= "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"
 
-        MODEL = "meta-llama/Llama-3.1-8B"
-        token= "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"
+            model_configs = {
+                'torch_dtype': 'bfloat16',
+                'device_map': 'cuda',
+                'token': token,
+                'quantization_config': BitsAndBytesConfig(
+                    load_in_4bit=True,
+                    bnb_4bit_use_double_quant=True,
+                    bnb_4bit_quant_type='nf4',
+                    bnb_4bit_compute_dtype= 'bfloat16'
+                )
+            }
 
-        model_configs = {
-            'torch_dtype': 'bfloat16',
-            'device_map': 'cuda',
-            'token': token,
-            'quantization_config': BitsAndBytesConfig(
-                load_in_4bit=True,
-                bnb_4bit_use_double_quant=True,
-                bnb_4bit_quant_type='nf4',
-                bnb_4bit_compute_dtype='bfloat16'
-            )
-        }
-
-        model = AutoModelForCausalLM.from_pretrained(MODEL, **model_configs)
-
+            model = AutoModelForCausalLM.from_pretrained(MODEL, **model_configs)
+        except Exception as e:
+            print(f"Error loading model: {e}")
+            model = None
         return model
 
-    def setTokenizer(): 
+    def setTokenizer(self): 
         """
         Set the tokenizer for Llama.
         Initializes the tokenizer with specific configurations such as the model name and token.

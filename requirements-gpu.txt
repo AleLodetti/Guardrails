@@ -1,5 +1,5 @@
-torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
 transformers
+sentence-transformers
 accelerate
 bitsandbytes
 auto-gptq
@@ -11,3 +11,7 @@ matplotlib
 sentencepiece
 protobuf<6.0.0,>=5.29.1
 pandas
+numpy
+scikit-learn
+Pillow
+scipy

@@ -10,6 +10,11 @@ from abc import ABC, abstractmethod
 class BaseLLM(ABC):
     """Base class for all LLM models."""
 
+    def __init__(self):
+        """Initialize the base LLM model."""
+        print("Base LLM model initialized.")
+        pass
+
     @abstractmethod
     def get_model_info(self) -> dict:
         """Returns information about the model."""

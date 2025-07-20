@@ -5,6 +5,7 @@ from guardrails_project.Util import modelManager
 from guardrails_project.Util.answerSaver import PromptSaver
 from guardrails_project.Util.checkResponse import CheckResponse
 from guardrails_project.constants import PATH_TO_RESPONSES
+from guardrails_project.LLMs.llama import Llama
 
 
 def instantiateModelAndFillFile():
@@ -22,7 +23,8 @@ def instantiateModelAndFillFile():
         try:
             if selected_model_name in ["mistral", "llama", "llama chat"]:
                 llm = LLMsFactory.create_llm(selected_model_name)
-                print(f"Model {selected_model_name} instantiated successfully.")
+                print('MODEL:', llm.getModel())
+                print(f"Model {llm.get_model_info()['name']} instantiated successfully.")
                 modelManager.saveModel(llm)
             else:
                 raise ValueError("Model not supported. Please choose from: Mistral, Llama, Llama chat.")
@@ -32,6 +34,7 @@ def instantiateModelAndFillFile():
     else:
         try:
             if selected_model_name in ["mistral", "llama", "llama chat"]:
+                print(f"Loading model {selected_model_name} from disk...")
                 llm = modelManager.loadModel(selected_model_name)
             else:
                 raise ValueError("Model not supported. Please choose from: Mistral, Llama, Llama chat.")
@@ -59,7 +62,7 @@ def instantiateModelAndFillFile():
         prompt = item["Goal"]
         print(f"\nProcessing prompt number: {i+1}: {prompt}")
 
-        response = llm.generate_response(llm, prompt, max_tokens=150)
+        response = llm.generate_response(prompt, max_tokens=150)
 
         print("Answer:", response)
 

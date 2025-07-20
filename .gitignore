@@ -40,3 +40,7 @@ saved_models/mistral/*
 saved_models/llama/*
 saved_models/llamaChat/*
 saved_models/llamaguard/*
+savedModels/llama/*
+savedModels/llamaChat/*
+savedModels/mistral/*
+savedModels/*
