@@ -21,21 +21,21 @@ Per poter funzionare necessità di una GPU Nvidia, se non ce l'hai problema tuo.
 Qui è descritta l'installazione su Windows (su linux è analoga, dovrebbe cambiare solo la parte legata a Microsoft C++ Build Tools).
 Superato questo enorme scoglio, servono: Git, Python e Microsoft C++ Build Tools
 
-### ![Git logo](https://git-scm.com/images/logos/downloads/Git-Icon-1788C.png) Git
+### <img src="https://git-scm.com/images/logos/downloads/Git-Icon-1788C.png" alt="git logo" width="20"/> Git
 Per clonare la repo:
 ```bash
 git clone https://github.com/AleLodetti/Guardrails/tree/main/guardrails_project
 cd tuo-repo
 ```
 
-### ![Python logo](https://www.python.org/static/community_logos/python-logo.png) Python 
+### <img src="https://www.python.org/static/community_logos/python-logo.png" alt="python logo" width="20"/> Python 
 Io utilizzo Python 3.11 (l'utlima versione forse non va). Per installare Python vai su https://www.python.org/downloads/ e durante l'installazione SPUNTA "add python to Path" (subito all'inizio) ed installa anche pip. Per verificare
 ```bash
 python --version (o py --version)
 pip --version
 ```
 
-### ![MSVC logo](https://visualstudio.microsoft.com/wp-content/uploads/2021/10/Product-Icon.svg) Microsoft C++ Build Tools
+### <img src="https://visualstudio.microsoft.com/wp-content/uploads/2021/10/Product-Icon.svg" alt="msvc logo" width="20"/> Microsoft C++ Build Tools
 Alcuni pacchetti che verranno installati nei requirements richiedono C++ per essere compilati perciò durante l'installazione di questo tool è necessario spuntare "Desktop development with C++" e "C++ CMake tools for Windows". Può essere scricato a questo link https://visualstudio.microsoft.com/visual-cpp-build-tools/
 
 ## Creazione dell'ambiente virtuale
