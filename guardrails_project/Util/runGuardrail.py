@@ -9,6 +9,7 @@ from guardrails_project.Util.answerSaver import PromptSaver
 from guardrails_project.Util.checkResponse import CheckResponse
 from guardrails_project.Util.parseDict import ParseDict
 from guardrails_project.constants import PATH_TO_RESPONSES
+from colorama import Fore, Style, init
 
 def runGuardrail():
     """
@@ -69,12 +70,6 @@ def runGuardrail():
             break
     
     promptReader.__exit__(None, None, None)
-
-    
-    #qui posso plottare i risultati o fare altre operazioni
-
-    #stampo il risultato in un file
-from colorama import Fore, Style, init
 
 def printWithColor(final_response: dict):
     """
