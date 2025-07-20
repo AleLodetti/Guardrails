@@ -3,19 +3,20 @@ import os
 
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
+from guardrails_project.Guardrails.llamaGuard import LlamaGuard
 from guardrails_project.LLMs.llmsFactory import LLMsFactory
 
 #con llama guard dovrebbe cambiare, soprattutto per il caricamente dove si usa
 #AutoModelForSequenceClassification...
 
-def saveModel(llm):
+def saveModel(model):
     """
     Save the model
     
     Args:
         model: The model to save.
     """
-    name = llm.get_model_info()['name']
+    name = model.get_model_info()['name']
     if name == "LlamaGuard":
         folder_name = "llamaguard"
     elif name == "Llama":
@@ -32,8 +33,8 @@ def saveModel(llm):
         os.makedirs(path)
 
     if os.path.exists(path):
-        llm.getModel().save_pretrained(path)
-        llm.getTokenizer().save_pretrained(path)
+        model.getModel().save_pretrained(path)
+        model.getTokenizer().save_pretrained(path)
 
         print(f"Model {name} saved successfully in {path}.")
     else:
@@ -55,15 +56,26 @@ def loadModel(model_name):
         model_name = "llamaChat"
     
     path = os.path.join("savedModels", model_name)
-        
-    try:
-        model = AutoModelForCausalLM.from_pretrained(path)
-        tokenizer = AutoTokenizer.from_pretrained(path)
-        llm = LLMsFactory.create_llm_custom(model_name, model=model, tokenizer=tokenizer)
-        print(f"Model {model_name} loaded successfully.")
-        return llm
-    except ValueError as e:
-        print(f"Error: {e}")
-        exit(1)
+
+    if model_name == "llamaguard":
+        try:
+            model = AutoModelForCausalLM.from_pretrained(path)
+            tokenizer = AutoTokenizer.from_pretrained(path)
+            llm = LlamaGuard(model = model, tokenizer = tokenizer)
+            print(f"Model {model_name} loaded successfully.")
+            return llm
+        except ValueError as e:
+            print(f"Error: {e}")
+            exit(1)
+    else:
+        try:
+            model = AutoModelForCausalLM.from_pretrained(path)
+            tokenizer = AutoTokenizer.from_pretrained(path)
+            llm = LLMsFactory.create_llm_custom(model_name, model=model, tokenizer=tokenizer)
+            print(f"Model {model_name} loaded successfully.")
+            return llm
+        except ValueError as e:
+            print(f"Error: {e}")
+            exit(1)
 
     

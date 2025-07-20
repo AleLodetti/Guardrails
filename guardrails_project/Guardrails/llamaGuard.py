@@ -1,16 +1,24 @@
 import torch
-from transformers import AutoModelForSequenceClassification, AutoTokenizer
+from transformers import AutoModelForCausalLM, AutoTokenizer
+from transformers import BitsAndBytesConfig
 
-from guardrails_project.constants import TOKEN
+from guardrails_project.LLMs.base_guard import BaseGuard
+from guardrails_project.constants import GUARDRAIL_TOKEN
 
 
-class LlamaGuard:
-    def __init__(self):
-        self.model = self.setModel()
-        self.tokenizer = self.setTokenizer()
-        self.classLabel = ["safe", "unsafe"]
+class LlamaGuard(BaseGuard):
+    def __init__(self, model = None, tokenizer = None):
+        super().__init__
+        if model is None and tokenizer is None:
+            self.model = self.setModel()
+            self.tokenizer = self.setTokenizer()
+            self.classLabel = ["safe", "unsafe"]
+        elif model is not None and tokenizer is not None:
+            self.model = model
+            self.tokenizer = tokenizer
+            self.classLabel = ["safe", "unsafe"]
 
-    def getModelInfo(self) -> dict:
+    def get_model_info(self) -> dict:
         """Returns information about the Llama model."""
         return {
             "name": "LlamaGuard",
@@ -18,33 +26,50 @@ class LlamaGuard:
             "description": "Llama model with guardrails for generating safe text responses."
         }
     
-    def classifyPrompt(self, prompt: str) -> str:
+    def validate_response(self, chat: dict) -> dict:
         """Classifies the prompt as safe or unsafe."""
-        inputs = self.tokenizer(prompt, return_tensors="pt")
-        inputs = inputs.to(self.model.device)
-
+        prompt = self.tokenizer.apply_chat_template(chat, tokenize=False, add_generation_prompt=True)
+        inputs = self.tokenizer(prompt, return_tensors="pt").to(self.model.device)
         with torch.no_grad():
-            logits = self.model(**inputs).logits
+                output = self.model.generate(
+                    **inputs,
+                    max_new_tokens=20,
+                    pad_token_id=self.tokenizer.eos_token_id
+                )
 
-        predictedClass = torch.argmax(logits, dim=1).item()
+            # Decodifica dell'output del classificatore
+        raw_output = self.tokenizer.decode(output[0][inputs['input_ids'].shape[-1]:], skip_special_tokens=True)
+        status, reason = raw_output.split(",", 1) if "," in raw_output else (raw_output.strip(), None)
 
-        return self.classLabel[predictedClass]
+        return {
+            "status": status.strip().lower(),          # es: "safe" o "unsafe"
+            "reason": reason.strip() if reason else None,
+            "raw_output": raw_output.strip(),
+            "chat": chat
+        }
     
     def setModel(self):
         MODEL = "meta-llama/LlamaGuard-7b"
-        token = TOKEN
+        token = GUARDRAIL_TOKEN
 
-        model = AutoModelForSequenceClassification.from_pretrained(
-            MODEL,
-            token=token,
-            device_map="auto",
-            torch_dtype=torch.bfloat16  # use float16 or bfloat16 depending on your hardware
-        )
+        model_configs = {
+            'torch_dtype': torch.bfloat16,
+            'device_map': 'auto',
+            'token' : token,
+            'quantization_config' : BitsAndBytesConfig(
+                load_in_4bit = True,
+                bnb_4bit_use_double_quant = True,
+                bnb_4bit_quant_type='nf4',
+                bnb_4bit_compute_dtype='bfloat16'
+            )
+        }
+
+        model = AutoModelForCausalLM.from_pretrained(MODEL, **model_configs)
         return model
     
     def setTokenizer(self):
         MODEL = "meta-llama/LlamaGuard-7b"
-        token = TOKEN
+        token = GUARDRAIL_TOKEN
 
         tokenizer = AutoTokenizer.from_pretrained(
             MODEL,

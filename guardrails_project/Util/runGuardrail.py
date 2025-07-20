@@ -7,6 +7,7 @@ from guardrails_project.Util import modelManager
 from guardrails_project.Util.answerReader import PromptReader
 from guardrails_project.Util.answerSaver import PromptSaver
 from guardrails_project.Util.checkResponse import CheckResponse
+from guardrails_project.Util.parseDict import ParseDict
 from guardrails_project.constants import PATH_TO_RESPONSES
 
 def runGuardrail():
@@ -14,17 +15,29 @@ def runGuardrail():
     Main function to run the guardrail evaluation. In this case it runs only Llama guard
     but it can be extended to run other models in the same spirit of the LLMsFactory.
     """
+    selected_guardrail_name = input("which guardrail do you want to use between Llamaguard and ...?").strip().lower()
+    instantiate = input("do you want to instantiate the model? (Y/n): ").strip().lower()
 
-    #definisco il modello
-    try:
-        selected_guardrail_name = "LlamaGuard"
-        guardrail = LlamaGuard()
-        modelManager.saveModel(guardrail)
-    except ValueError as e:
-        print(f"Error: {e}")
-        exit(1)
+    if instantiate == 'y':
+        #definisco il modello
+        try:
+            guardrail = LlamaGuard()
+            modelManager.saveModel(guardrail)
+        except ValueError as e:
+            print(f"Error: {e}")
+            exit(1)
+    else:
+        try:
+            if selected_guardrail_name in ["llamaguard"]:
+                print(f"Loading guardrail {selected_guardrail_name} from disk...")
+                guardrail = modelManager.loadModel(selected_guardrail_name)
+            else:
+                raise ValueError("Guardrail not supported. Please choose from: Llamaguard")
+        except ValueError as e:
+            print(f"Error: {e}")
+            exit(1)
 
-    print(f"Using guardrail: {guardrail.getModelInfo()['name']}")
+    print(f"Using guardrail: {guardrail.get_model_info()['name']}")
 
     #leggo le risposte precedenti una ad una e le valuto
 
@@ -47,13 +60,10 @@ def runGuardrail():
     while True:
         data = promptReader.getNextDict()
         if data is not None:
-            #la valuto con LlamaGuard
-    
-    #    questa è la sintassi per mandare in ingresso dei prompt a llama guard.
-    #    <|start_header_id|>user<|end_header_id|>
-    #    What is the easiest way to break into a car?
-    #    <|eot_id|><|start_header_id|>assistant<|end_header_id|>
-            print("hello")
+        #la valuto con LlamaGuard
+            chat = ParseDict().parser(selected_guardrail_name, selected_model_name, data)
+            final_response = guardrail.validate_response(chat)
+            printWithColor(final_response)
         else:
             print("No more responses to evaluate.")
             break
@@ -64,3 +74,41 @@ def runGuardrail():
     #qui posso plottare i risultati o fare altre operazioni
 
     #stampo il risultato in un file
+from colorama import Fore, Style, init
+
+def printWithColor(final_response: dict):
+    """
+    Stampa la risposta del guardrail a colori.
+
+    Args:
+        final_response (dict): Output di validate_response(), es:
+            {
+              "status": "unsafe",
+              "reason": "S1: Hate Speech",
+              "raw_output": "unsafe, S1: Hate Speech",
+              "chat": "..."
+            }
+    """
+    init(autoreset=True)
+
+    status = final_response.get("status", "").lower()
+    reason = final_response.get("reason")
+    raw = final_response.get("raw_output", "")
+    resp = final_response.get("chat", "")
+
+    if status == "safe":
+        color = Fore.GREEN
+        symbol = "✅"
+    elif status == "unsafe":
+        color = Fore.RED
+        symbol = "❗"
+    else:
+        color = Fore.YELLOW
+        symbol = "⚠️"
+    print("-------------------------------------------------------------")
+    print(f"{color}{symbol} LlamaGuard: {status.upper()}{Style.RESET_ALL}")
+    if reason:
+        print(f"{color}   → Reason: {reason}{Style.RESET_ALL}")
+
+    print(f"{Style.DIM}Model response:{Style.RESET_ALL}\n{resp}\n")
+    print(f"{Style.DIM}Raw guardrail output: {raw}{Style.RESET_ALL}")

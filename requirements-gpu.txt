@@ -15,3 +15,4 @@ numpy
 scikit-learn
 Pillow
 scipy
+hf_xet
