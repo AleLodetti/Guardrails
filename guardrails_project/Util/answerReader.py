@@ -10,7 +10,7 @@ class PromptReader:
 
         Args:
             file_path (str): The path to the JSON file.
-            model_name (str): The name of the model to determine the file name.
+            model_name (str): The name of the model to determine the file name. It can be a guardrail too.
         """
         self.file_path = os.path.join(file_path, model_name)
         self.file = None

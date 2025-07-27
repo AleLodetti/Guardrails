@@ -17,6 +17,9 @@ class LlamaGuard(BaseGuard):
             self.model = model
             self.tokenizer = tokenizer
             self.classLabel = ["safe", "unsafe"]
+        print(self.model.hf_device_map)
+
+
 
     def get_model_info(self) -> dict:
         """Returns information about the Llama model."""
@@ -27,9 +30,26 @@ class LlamaGuard(BaseGuard):
         }
     
     def validate_response(self, chat: dict) -> dict:
-        """Classifies the prompt as safe or unsafe."""
+        """this method checks if the chat is safe from the point of view
+        LlamaGuard, meaning that there is not attempt of jailbreaking 
+        the LLM.
+
+        Args:
+            chat (dict): is a ditionare that contains the prompt and the 
+            LLM response.
+
+        Returns:
+            dict: it return a dictionare of a format {
+              "status": "unsafe",
+              "reason": "S1: Hate Speech",
+              "raw_output": "unsafe, S1: Hate Speech",
+              "chat": "..."
+            }
+        """
         prompt = self.tokenizer.apply_chat_template(chat, tokenize=False, add_generation_prompt=True)
         inputs = self.tokenizer(prompt, return_tensors="pt").to(self.model.device)
+        print(f"[DEBUG] model device: {self.model.device}")
+        print(f"[DEBUG] Input device: {inputs['input_ids'].device}")
         with torch.no_grad():
                 output = self.model.generate(
                     **inputs,
@@ -39,14 +59,34 @@ class LlamaGuard(BaseGuard):
 
             # Decodifica dell'output del classificatore
         raw_output = self.tokenizer.decode(output[0][inputs['input_ids'].shape[-1]:], skip_special_tokens=True)
-        status, reason = raw_output.split(",", 1) if "," in raw_output else (raw_output.strip(), None)
+        status, category, reason = self.parseRawOutput(raw_output) 
 
         return {
             "status": status.strip().lower(),          # es: "safe" o "unsafe"
+            "category": category.strip().upper() if category else "unknown",
             "reason": reason.strip() if reason else None,
-            "raw_output": raw_output.strip(),
-            "chat": chat
+            #"chat": chat
         }
+
+    def parseRawOutput(self, raw_output: str):
+        raw_output = raw_output.strip()
+        # Prova a dividere per newline
+        lines = raw_output.split("\n")
+
+        status = lines[0].strip().lower()  # prima riga → "safe" o "unsafe"
+
+        category = None
+        reason = None
+
+        if len(lines) > 1:
+            line = lines[1]
+            # es: "O1: Hate Speech" → categoria e motivo
+            if ":" in line:
+                category, reason = map(str.strip, line.split(":", 1))
+            else:
+                category = line.strip()
+
+        return status, category, reason
     
     def setModel(self):
         MODEL = "meta-llama/LlamaGuard-7b"
@@ -71,12 +111,19 @@ class LlamaGuard(BaseGuard):
         MODEL = "meta-llama/LlamaGuard-7b"
         token = GUARDRAIL_TOKEN
 
-        tokenizer = AutoTokenizer.from_pretrained(
+        """tokenizer = AutoTokenizer.from_pretrained(
             MODEL,
             token=token,
-            use_fast=True
-        )
-        tokenizer.pad_token = tokenizer.eos_token
+            use_fast=True,
+            trust_remote_code=True
+        )"""
+
+        token_config = {'token': token}
+
+        tokenizer = AutoTokenizer.from_pretrained(MODEL, **token_config)
+
+        if tokenizer.pad_token is None:
+            tokenizer.pad_token = tokenizer.eos_token
         return tokenizer
     
     def getTokenizer(self):

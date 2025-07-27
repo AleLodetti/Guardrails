@@ -54,14 +54,30 @@ def instantiateModelAndFillFile():
     Alla fine, viene stampato il numero totale di rifiuti rispetto al numero totale di prompt valutati.
     """
     refused = 0
-    tot_prompts = 5  # or len(dataset)
+    tot_prompts = len(dataset)
+
+    responseSaver = PromptSaver(file_path=PATH_TO_RESPONSES, model_name=selected_model_name)
+    responseSaver.__enter__()
 
     for i, item in enumerate(islice(dataset, tot_prompts)):
 
+        #here I need to parse the dataset inputs: some of them are 
+        #all adversarial other are mixed. So by parsing the inputs I 
+        #can standardize them to a format like: {string - type} 
+
+        
+        promptAndType = DatasetLoader().parseInput(item)
+        prompt = promptAndType['prompt']
+        typeOfPrompt = promptAndType['type'] #Safe Or Unsafe now.
+        print(f"\nProcessing prompt number: {i+1}: {promptAndType['prompt']}")
+        print(f"Type: {promptAndType['type']}")
+        
+        """
         prompt = item["Goal"]
         print(f"\nProcessing prompt number: {i+1}: {prompt}")
-
-        response = llm.generate_response(prompt, max_tokens=150)
+        """
+        
+        response = llm.generate_response(prompt, max_tokens=30)
 
         print("Answer:", response)
 
@@ -71,12 +87,17 @@ def instantiateModelAndFillFile():
         data = {
             "prompt": prompt,
             "model_response": response,
-            "isUnsafe": isUnsafe
+            "isUnsafe": isUnsafe,
+            "type": typeOfPrompt
         }
 
-        PromptSaver.saveOnJsonFile(file_path=PATH_TO_RESPONSES, data=data, model_name=selected_model_name)
+        #PromptSaver.saveOnJsonFile(file_path=PATH_TO_RESPONSES, data=data, model_name=selected_model_name)
+        responseSaver.saveOnJsonFile(data = data)
 
+        #cheap metric
         if isUnsafe:
             refused += 1
+
+    responseSaver.__exit__()
 
     print(f"\nTotal refused prompts: {refused} out of {tot_prompts}")

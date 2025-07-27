@@ -8,7 +8,7 @@ from guardrails_project.Util.answerReader import PromptReader
 from guardrails_project.Util.answerSaver import PromptSaver
 from guardrails_project.Util.checkResponse import CheckResponse
 from guardrails_project.Util.parseDict import ParseDict
-from guardrails_project.constants import PATH_TO_RESPONSES
+from guardrails_project.constants import PATH_TO_RESPONSES, PATH_TO_RESULTS
 from colorama import Fore, Style, init
 
 def runGuardrail():
@@ -57,6 +57,9 @@ def runGuardrail():
 
     promptReader = PromptReader(file_path=PATH_TO_RESPONSES, model_name=file_name)
     promptReader.__enter__()
+
+    resultSaver = PromptSaver(file_path = PATH_TO_RESULTS, model_name = selected_guardrail_name)
+    resultSaver.__enter__()
     
     while True:
         data = promptReader.getNextDict()
@@ -64,11 +67,28 @@ def runGuardrail():
         #la valuto con LlamaGuard
             chat = ParseDict().parser(selected_guardrail_name, selected_model_name, data)
             final_response = guardrail.validate_response(chat)
-            printWithColor(final_response)
+
+            #if isUnsafe == true it means that the LLM modify the 
+            # answer to make it safe ergo: the LLM detected correctly the
+            # unsafeness of the prompt; else it considered it safe.
+            if data["isUnsafe"] is True:
+                originalDetection = "unsafe"
+            else:
+                originalDetection = "safe"
+
+            result = {
+                "originalDetection": originalDetection,
+                "guardrailDetection":final_response["status"],
+                "groundTruth": data["type"] 
+            }
+            #PromptSaver.saveResponseOnJsonl(PATH_TO_RESULTS, result, selected_guardrail_name)
+            resultSaver.saveResponseOnJsonl(result)
+            #printWithColor(final_response)
         else:
             print("No more responses to evaluate.")
             break
     
+    resultSaver.__exit__(None, None, None)
     promptReader.__exit__(None, None, None)
 
 def printWithColor(final_response: dict):
@@ -79,17 +99,25 @@ def printWithColor(final_response: dict):
         final_response (dict): Output di validate_response(), es:
             {
               "status": "unsafe",
-              "reason": "S1: Hate Speech",
-              "raw_output": "unsafe, S1: Hate Speech",
-              "chat": "..."
+              "category": o1, o2...
+              "reason": "S1: Hate Speech"
             }
     """
     init(autoreset=True)
 
+    
+    CATEGORY_MAP = {
+        "O1": "Safety and Emergency",
+        "O2": "Off-Topic",
+        "O3": "Complex Conditions",
+        "O4": "Hate Speech",
+        "O5": "Violence or Threats",
+        # aggiungi qui tutte le categorie che ti servono
+    }
+
     status = final_response.get("status", "").lower()
-    reason = final_response.get("reason")
-    raw = final_response.get("raw_output", "")
-    resp = final_response.get("chat", "")
+    category = final_response.get("category", "").upper()
+    reason = final_response.get("reason", "")
 
     if status == "safe":
         color = Fore.GREEN
@@ -100,10 +128,15 @@ def printWithColor(final_response: dict):
     else:
         color = Fore.YELLOW
         symbol = "⚠️"
+    
+    categoryDescription = CATEGORY_MAP.get(category, "unkown Category")
+    
     print("-------------------------------------------------------------")
     print(f"{color}{symbol} LlamaGuard: {status.upper()}{Style.RESET_ALL}")
+    if category:
+        print(f"{color}   → Category: {category} - {categoryDescription}{Style.RESET_ALL}")
     if reason:
         print(f"{color}   → Reason: {reason}{Style.RESET_ALL}")
 
-    print(f"{Style.DIM}Model response:{Style.RESET_ALL}\n{resp}\n")
-    print(f"{Style.DIM}Raw guardrail output: {raw}{Style.RESET_ALL}")
+    #print(f"{Style.DIM}Model response:{Style.RESET_ALL}\n{resp}\n")
+    #print(f"{Style.DIM}Raw guardrail output: {raw}{Style.RESET_ALL}")

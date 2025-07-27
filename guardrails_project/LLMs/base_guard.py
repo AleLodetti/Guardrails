@@ -15,5 +15,19 @@ class BaseGuard(Base):
 
     @abstractmethod
     def validate_response(self, chat: dict) -> dict:
-        """Generates a response based on a conversation."""
+        """
+        This method checks if the chat is safe, meaning that there is not attempt of jailbreaking the LLM.
+
+        Args:
+            chat (dict): is a dictionary that contains the prompt and the LLM response. Every guardrail has its own format.
+
+        Returns:
+            dict: it return a dictionary of a format:
+                {
+                "status": "unsafe",
+                "reason": "S1: Hate Speech",
+                "raw_output": "unsafe, S1: Hate Speech",
+                "chat": "..."
+                }
+        """
         pass

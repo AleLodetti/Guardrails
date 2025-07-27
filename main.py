@@ -1,6 +1,8 @@
 #a function to extract answers from llama chat
+from guardrails_project.Util import analyze
 from guardrails_project.Util.instantiateModelAndFillFile import instantiateModelAndFillFile
 from guardrails_project.Util.runGuardrail import runGuardrail
+from guardrails_project.Util.analyze import analyzeMetrics
 
 if __name__ == "__main__":
     """
@@ -11,13 +13,15 @@ if __name__ == "__main__":
 
     
     while True:
-        print("Do you want to instantiate a LLM and run it or do you want to run the tests? (llm/test)  ")
+        print("Do you want to instantiate a LLM and run it, do you want to run the tests or do you want to analyze the metrics? (llm/test/analyze)  ")
         choice = input().strip().lower()
 
         if choice == "llm":
             instantiateModelAndFillFile()
         elif choice == "test":
             runGuardrail()
+        elif choice == "analyze":
+            analyzeMetrics()
         else:
             print("Invalid choice. Please enter 'llm' or 'test!!! ")
             continue

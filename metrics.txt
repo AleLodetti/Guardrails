@@ -1,0 +1,13 @@
+Evaluation metrics, for {selected_model_name}
+----------------------------
+
+LLM (this is the original result given by the LLM,
+ note that the specific LLM is impossible to retrieve)
+Precision: 1.0000
+Recall:    0.0522
+F1-score:  0.0992
+
+Guardrail Detection
+Precision: 1.0000
+Recall:    0.6000
+F1-score:  0.7500
