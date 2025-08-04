@@ -6,6 +6,7 @@ from guardrails_project.Util.answerSaver import PromptSaver
 from guardrails_project.Util.checkResponse import CheckResponse
 from guardrails_project.constants import PATH_TO_RESPONSES
 from guardrails_project.LLMs.llama import Llama
+from guardrails_project.DataLoader.superDataset import SuperDataset
 
 
 def instantiateModelAndFillFile():
@@ -65,8 +66,9 @@ def instantiateModelAndFillFile():
         #all adversarial other are mixed. So by parsing the inputs I 
         #can standardize them to a format like: {string - type} 
 
-        
-        promptAndType = DatasetLoader().parseInput(item)
+        #item is the row of the dataset, with parseInput() I shall select what I need.
+        #promptAndType = DatasetLoader().parseInput(item)
+        promptAndType = dataset.parseInput(item)
         prompt = promptAndType['prompt']
         typeOfPrompt = promptAndType['type'] #Safe Or Unsafe now.
         print(f"\nProcessing prompt number: {i+1}: {promptAndType['prompt']}")
