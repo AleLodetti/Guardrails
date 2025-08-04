@@ -71,6 +71,9 @@ def instantiateModelAndFillFile():
         promptAndType = dataset.parseInput(item)
         prompt = promptAndType['prompt']
         typeOfPrompt = promptAndType['type'] #Safe Or Unsafe now.
+        
+        
+        
         print(f"\nProcessing prompt number: {i+1}: {promptAndType['prompt']}")
         print(f"Type: {promptAndType['type']}")
         
