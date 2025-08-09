@@ -3,6 +3,8 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 from transformers import BitsAndBytesConfig
 import torch
 
+from guardrails_project.constants import TOKEN
+
 class Mistral(BaseLLM):
     """Mistral model for text generation.
 
@@ -99,7 +101,7 @@ class Mistral(BaseLLM):
             tokenizer: The Mistral tokenizer instance.
         """
         MODEL = 'mistralai/Mistral-7B-v0.3'
-        token = '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'
+        token = TOKEN
         tokeniser_configs = {'token': token}
         tokenizer = AutoTokenizer.from_pretrained(MODEL, **tokeniser_configs)
         tokenizer.pad_token = tokenizer.eos_token  # This is just to suppress a warning
