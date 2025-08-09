@@ -26,9 +26,13 @@ class Wildjailbreak(SuperDataset):
         prompt = item.get("user_input", "").strip()
         #type_of_prompt = item.get("Type", "").strip().lower()  # safe o unsafe
 
-        #i need to see the db
+        if item.get("data_type", "").strip() == "adversarial_harmful":
+            typePrompt = "unsafe"
+        else:
+            typePrompt = "safe"
+
 
         return {
             "prompt": prompt,
-            "type": "unsafe"
+            "type": typePrompt
         }

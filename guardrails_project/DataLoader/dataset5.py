@@ -28,9 +28,14 @@ class Wildguardmix(SuperDataset):
                   es: {'prompt': 'What is 2+2?', 'type': 'safe'}
         """
         prompt = item.get("prompt", "").strip()
-        #type_of_prompt = item.get("Type", "").strip().lower()  # safe o unsafe
+
+        if item.get("prompt_harm_label", "").strip() == "harmful" or item.get("adversarial", "").strip() == "true":
+            typePrompt = "unsafe"
+        else:
+            typePrompt = "safe"
+
 
         return {
             "prompt": prompt,
-            "type": "unsafe"
+            "type": typePrompt
         }

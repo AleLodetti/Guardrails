@@ -27,14 +27,15 @@ class ToxicChat(SuperDataset):
             dict: Un dizionario con le chiavi 'prompt' e 'type'
                   es: {'prompt': 'What is 2+2?', 'type': 'safe'}
         """
-        typePrompt = item.get("toxicity", "").strip()
-        while True:
-            if typePrompt == "0":
-                prompt = item.get("user_input", "").strip()
-                break
-            typePrompt = item.get("toxicity", "").strip()
+
+        prompt = item.get("user input", "")
+
+        if item.get("jailbreaking", "").strip() == "1":
+            typePrompt = "unsafe"
+        else:
+            typePrompt = "safe"
 
         return {
             "prompt": prompt,
-            "type": "unsafe"
+            "type": typePrompt
         }

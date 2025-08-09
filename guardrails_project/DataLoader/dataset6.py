@@ -33,13 +33,7 @@ class XSTest(SuperDataset):
         
         typePrompt = item.get("label", "").strip()
 
-        while True:
-            if typePrompt == "unsafe":
-                prompt = item.get("prompt", "").strip()
-                break
-            typePrompt = item.get("label", "").strip()
-
         return {
             "prompt": prompt,
-            "type": "unsafe"
+            "type": typePrompt
         }

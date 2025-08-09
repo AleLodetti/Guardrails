@@ -1,5 +1,5 @@
 from guardrails_project.DataLoader.superDataset import SuperDataset
-from datasets import load_dataset
+from datasets import load_dataset,concatenate_datasets
 import pandas as pd
 
 class JailbreakBench(SuperDataset):
@@ -7,7 +7,11 @@ class JailbreakBench(SuperDataset):
         super.__init__()
     
     def loadData(self):
-        return load_dataset("JailbreakBench/JBB-Behaviors", name="behaviors", split="harmful")
+        set1 = load_dataset("JailbreakBench/JBB-Behaviors", name="behaviors", split="harmful")
+        set2 = load_dataset("JailbreakBench/JBB-Behaviors", name="behaviors", split="benign")
+
+        combined = concatenate_datasets([set1, set2])
+        return combined
 
     def parseInput(self, item: dict) -> dict:
         """

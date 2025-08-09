@@ -22,7 +22,7 @@ class DatasetLoader:
         """
         print("Select a dataset to load:")
         print("1 - JailbreakBench Behaviors (HuggingFace)")
-        print("2 - JailBreakV_28K")
+        print("2 - JailBreakV_28K (this one only contains adversarial prompts)")
         print("3 - WIldjailbreak")
         print("4 - ToxicChat")
         print("5 - Wildguardmix")

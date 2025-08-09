@@ -2,6 +2,7 @@ from guardrails_project.DataLoader.superDataset import SuperDataset
 from datasets import load_dataset
 import pandas as pd
 
+#this dataset contains only unsafe prompt
 class JailbreakV_28K(SuperDataset):
     def __init__(self):
         super.__init__()
