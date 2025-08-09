@@ -92,8 +92,10 @@ def instantiateModelAndFillFile():
         data = {
             "prompt": prompt,
             "model_response": response,
-            "isUnsafe": isUnsafe,
+            #it is true if the method is_refusal detected that the llm refused to generate a response, it is false if the method detected that the llm hasn't refused to generate the response
+            "isUnsafe": isUnsafe, 
             "type": typeOfPrompt
+
         }
 
         #PromptSaver.saveOnJsonFile(file_path=PATH_TO_RESPONSES, data=data, model_name=selected_model_name)

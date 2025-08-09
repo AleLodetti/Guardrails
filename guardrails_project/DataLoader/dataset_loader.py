@@ -8,6 +8,7 @@ from guardrails_project.DataLoader.dataset3 import Wildjailbreak
 from guardrails_project.DataLoader.dataset4 import ToxicChat
 from guardrails_project.DataLoader.dataset5 import Wildguardmix
 from guardrails_project.DataLoader.dataset6 import XSTest
+from guardrails_project.DataLoader.dataset7 import CSVfile
 
 class DatasetLoader:
     def __init__(self):
@@ -23,6 +24,10 @@ class DatasetLoader:
         print("1 - JailbreakBench Behaviors (HuggingFace)")
         print("2 - JailBreakV_28K")
         print("3 - WIldjailbreak")
+        print("4 - ToxicChat")
+        print("5 - Wildguardmix")
+        print("6 - XSTest")
+        print("7 - CSV file")
 
         choice = input("Enter your choice (1/2): ").strip()
 
@@ -44,6 +49,9 @@ class DatasetLoader:
             return dataset.loadData()
         elif choice == "6":
             dataset = XSTest()
+            return dataset.loadData()
+        elif choice == "7":
+            dataset = CSVfile()
             return dataset.loadData()
         else:
             print("Invalid choice")

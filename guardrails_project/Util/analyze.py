@@ -1,5 +1,5 @@
 from guardrails_project.Util.answerReader import PromptReader
-from guardrails_project.constants import PATH_TO_RESULTS
+from guardrails_project.constants import PATH_TO_RESULTS, CURRENT_GUARDRAIL, CURRENT_LLM
 from sklearn.metrics import precision_score, recall_score, f1_score
 
 
@@ -34,15 +34,16 @@ def analyzeMetrics():
         """
         data has the following format:
         {
-            "originalDetection": ... ,
-            "guardrailDetection": ... ,
-            "groundTruth": ... ,
+            "originalDetection": safe/unsafe,
+            "guardrailDetection": safe/unsafe,
+            "groundTruth": safe/unsafe
         }
         """
         data = promptReader.getNextDict()
         if data is not None:
             #calculate the statistics
             number_of_items = number_of_items + 1
+
             predicted_labels_llm.append(1 if data["originalDetection"] == "unsafe" else 0)
             predicted_labels_guard.append(1 if data["guardrailDetection"] == "unsafe" else 0)
 
@@ -58,8 +59,12 @@ def analyzeMetrics():
     
     promptReader.__exit__(None, None, None)
 
-    #calculate statistic
-
+    """
+        remember:
+        - precision: it is how many correct positive predictions have been made on the total of the positive predictions. TP/(TP + FP)
+        - recall: percentage of positive examples founded on the total real examples TP/(TP + FN)
+        - F1 Score: it is the aritmetic average 2*(Precision*Recall)/(Precision + Recall)
+    """
     precision_llm = precision_score(true_labels, predicted_labels_llm)
     precision_guard = precision_score(true_labels, predicted_labels_guard)
 
@@ -71,16 +76,16 @@ def analyzeMetrics():
 
     #print them
 
-    with open("metrics.txt", "w") as f:
+    with open("metrics.txt", "a") as f:
         f.write("Evaluation metrics, for {selected_model_name}\n")
         f.write("----------------------------\n\n")
 
-        f.write("LLM (this is the original result given by the LLM,\n note that the specific LLM is impossible to retrieve)\n")
+        f.write(f"LLM: {CURRENT_LLM}\n")
         f.write(f"Precision: {precision_llm:.4f}\n")
         f.write(f"Recall:    {recall_llm:.4f}\n")
         f.write(f"F1-score:  {f1_llm:.4f}\n\n")
 
-        f.write("Guardrail Detection\n")
+        f.write(F"Guardrail: {CURRENT_GUARDRAIL}\n")
         f.write(f"Precision: {precision_guard:.4f}\n")
         f.write(f"Recall:    {recall_guard:.4f}\n")
         f.write(f"F1-score:  {f1_guard:.4f}\n")
