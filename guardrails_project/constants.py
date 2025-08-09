@@ -1,5 +1,5 @@
 TOKEN = "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"
-GUARDRAIL_TOKEN = "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"
+GUARDRAIL_TOKEN = "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"
 PATH_TO_RESPONSES = "responses"
 CLASSIFIER_THRESHOLD = 0.7
 PATH_TO_RESULTS = "results"
