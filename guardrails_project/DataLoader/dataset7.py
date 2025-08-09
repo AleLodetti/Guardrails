@@ -34,7 +34,7 @@ class CSVfile(SuperDataset):
         prompt = item.get("prompt", "").strip()
         #type_of_prompt = item.get("Type", "").strip().lower()  # safe o unsafe
 
-        if item.get("prompt", "").strip() == "true":
+        if item.get("jailbreak", "").strip() == "true":
             typePrompt = "unsafe"
         else:
             typePrompt = "safe"
