@@ -12,6 +12,7 @@ from guardrails_project.Util.answerReader import PromptReader
 from guardrails_project.Util.answerSaver import PromptSaver
 from guardrails_project.Util.checkResponse import CheckResponse
 from guardrails_project.Util.parseDict import ParseDict
+from guardrails_project.Util.prepDatasets import runGuardrail
 from guardrails_project.constants import *
 
 def runGuardrail(choice):
@@ -20,22 +21,12 @@ def runGuardrail(choice):
     """
     if choice == 1:
         selected_guardrail_name = "perspectiveapi"
-        guardrail = PerspectiveAPI()
-        print("Starting the analysis of datasets using PerspectiveAPI. This may take a while...")
-        guardrail.runEvaluation()
-        guardrail.saveResults()
+        guardrail = runGuardrail(choice)
     elif choice == 2:
         selected_guardrail_name = "detectjailbreak"
-        guardrail = DetectJailbreak()
-        print("Starting the analysis of datasets using Detect Jailbreak. This may take a while...")
-        guardrail.runEvaluation()
-        guardrail.saveResults()
+        guardrail = runGuardrail(choice)
     elif choice == 3:
-        selected_guardrail_name = "promptshields"
-        guardrail = PromptShields()
-        print("Starting the analysis of datasets using Prompt Shields. This may take a while...")
-        guardrail.runEvaluation()
-        guardrail.saveResults()
+        guardrail = runGuardrail(choice)
     else:
     #selected_guardrail_name = input("which guardrail do you want to use between Llamaguard and ...?").strip().lower()
         selected_guardrail_name = "llamaguard"
