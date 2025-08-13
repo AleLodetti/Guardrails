@@ -13,11 +13,20 @@ We present a systematic, empirical evaluation of four ready-to-use guardrail sys
 ### Requirements:
 * A Google account that includes Google Cloud
 * A project created in Google Cloud
-* The API key, which can be requested filling this [form](https://docs.google.com/forms/d/e/1FAIpQLSdhBBnVVVbXSElby-jhNnEj-Zwpt5toQSCFsJerGfpXW66CuQ/viewform). Remember to insert your API key in [perspectiveAPI.py](guardrails_project/Guardrails/perspectiveAPI.py)
-You can find further detail in PerspectiveAPI [documentation](https://developers.perspectiveapi.com/s/docs-get-started?language=en_US)
+* The API key, which can be requested filling this [form](https://docs.google.com/forms/d/e/1FAIpQLSdhBBnVVVbXSElby-jhNnEj-Zwpt5toQSCFsJerGfpXW66CuQ/viewform). Remember to insert your API key in [perspectiveAPI.py](guardrails_project/Guardrails/perspectiveAPI.py).
+You can find further detail in PerspectiveAPI [documentation](https://developers.perspectiveapi.com/s/docs-get-started?language=en_US).
 ## 🕵️‍♂️ Detect Jailbreak
 ### Requirements:
-
+* Being registered on [Guardrails Hub](https://hub.guardrailsai.com/)
+* Create an API key on your profile
+* Install the requirements for the whole project (see below) which contain the **_guardrails-ai_ import**
+Now you can type the following commands:
+```bash
+guardrails configure (and this is when you'll need to paste your API key)
+guardrails hub install hub://guardrails/detect_jailbreak
+```
+Note: if **guardrails** is not recognized as a command, you may need to find the path to **guardrails.exe** and use that.
+Further information can be found on Guardrails AI [blog](https://www.guardrailsai.com/blog/advanced-pii-and-jailbreak).
 
 ## 🛡️ Prompt Shields
 ### Requirements:
