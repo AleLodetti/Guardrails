@@ -1,6 +1,9 @@
 import os
 from guardrails_project import constants
 from guardrails_project.Guardrails.llamaGuard import LlamaGuard
+from guardrails_project.Guardrails.perspectiveAPI import PerspectiveAPI
+from guardrails_project.Guardrails.detectJailbreak import DetectJailbreak
+from guardrails_project.Guardrails.promptShields import PromptShields
 from guardrails_project.LLMs.llmsFactory import LLMsFactory
 from guardrails_project.DataLoader.dataset_loader import DatasetLoader
 from itertools import islice
@@ -11,88 +14,106 @@ from guardrails_project.Util.checkResponse import CheckResponse
 from guardrails_project.Util.parseDict import ParseDict
 from guardrails_project.constants import *
 
-def runGuardrail():
+def runGuardrail(choice):
     """
-    Main function to run the guardrail evaluation. In this case it runs only Llama guard
-    but it can be extended to run other models in the same spirit of the LLMsFactory.
+    Main function to run the guardrail evaluation. 
     """
-    selected_guardrail_name = input("which guardrail do you want to use between Llamaguard and ...?").strip().lower()
-    instantiate = input("do you want to instantiate the model? (Y/n): ").strip().lower()
-
-    if instantiate == 'y':
-        #definisco il modello
-        try:
-            guardrail = LlamaGuard()
-            modelManager.saveModel(guardrail)
-        except ValueError as e:
-            print(f"Error: {e}")
-            exit(1)
+    if choice == 1:
+        selected_guardrail_name = "perspectiveapi"
+        guardrail = PerspectiveAPI()
+        print("Starting the analysis of datasets using PerspectiveAPI. This may take a while...")
+        guardrail.runEvaluation()
+        guardrail.saveResults()
+    elif choice == 2:
+        selected_guardrail_name = "detectjailbreak"
+        guardrail = DetectJailbreak()
+        print("Starting the analysis of datasets using Detect Jailbreak. This may take a while...")
+        guardrail.runEvaluation()
+        guardrail.saveResults()
+    elif choice == 3:
+        selected_guardrail_name = "promptshields"
+        guardrail = PromptShields()
+        print("Starting the analysis of datasets using Prompt Shields. This may take a while...")
+        guardrail.runEvaluation()
+        guardrail.saveResults()
     else:
-        try:
-            if selected_guardrail_name in ["llamaguard"]:
-                print(f"Loading guardrail {selected_guardrail_name} from disk...")
-                guardrail = modelManager.loadModel(selected_guardrail_name)
-            else:
-                raise ValueError("Guardrail not supported. Please choose from: Llamaguard")
-        except ValueError as e:
-            print(f"Error: {e}")
-            exit(1)
-
-    print(f"Using guardrail: {guardrail.get_model_info()['name']}")
-
-    #leggo le risposte precedenti una ad una e le valuto
-
-    print("do you wanna test the responses of llama, llama chat (not suggested) or mistral? (llama/llama chat/mistral)")
-    selected_model_name = input().strip().lower()
-
-    if selected_model_name == "llama":
-        file_name = "responsesLlama.jsonl"
-    elif selected_model_name == "llama chat":
-        file_name = "responsesLlamaChat.jsonl"
-    elif selected_model_name == "mistral":
-        file_name = "responsesMistral.jsonl"
-    else:
-        print("Invalid model name.")
-        return
-    
-    with open("constants.py", "w") as f:
-        f.write(f'PATH_TO_RESPONSES = "{constants.PATH_TO_RESPONSES}"\n')
-        f.write(f'CLASSIFIER_THRESHOLD = {constants.CLASSIFIER_THRESHOLD}\n')
-        f.write(f'PATH_TO_RESULTS = "{constants.PATH_TO_RESULTS}"\n')
-        f.write(f'CURRENT_GUARDRAIL = "{guardrail.get_model_info()['name']}"\n')
-        f.write(f'CURRENT_LLM = "{selected_model_name}"\n') 
-
-    promptReader = PromptReader(file_path=PATH_TO_RESPONSES, model_name=file_name)
-    promptReader.__enter__()
-
-    resultSaver = PromptSaver(file_path = PATH_TO_RESULTS, model_name = selected_guardrail_name)
-    resultSaver.__enter__()
-    
-    while True:
-        data = promptReader.getNextDict()
-        if data is not None:
-        #la valuto con LlamaGuard
-            chat = ParseDict().parser(selected_guardrail_name, selected_model_name, data)
-            final_response = guardrail.validate_response(chat)
-
-            #if isUnsafe == true it means that the LLM modify the 
-            # answer to make it safe ergo: the LLM detected the
-            # unsafeness of the prompt; else it considered it safe.
-            if data["isUnsafe"] is True:
-                originalDetection = "unsafe"
-            else:
-                originalDetection = "safe"
-
-            result = {
-                "originalDetection": originalDetection,
-                "guardrailDetection":final_response["status"],
-                "groundTruth": data["type"] 
-            }
-            #PromptSaver.saveResponseOnJsonl(PATH_TO_RESULTS, result, selected_guardrail_name)
-            resultSaver.saveResponseOnJsonl(result)
+    #selected_guardrail_name = input("which guardrail do you want to use between Llamaguard and ...?").strip().lower()
+        selected_guardrail_name = "llamaguard"
+        instantiate = input("do you want to instantiate the model? (Y/n): ").strip().lower()
+        if instantiate == 'y':
+            #definisco il modello
+            try:
+                guardrail = LlamaGuard()
+                modelManager.saveModel(guardrail)
+            except ValueError as e:
+                print(f"Error: {e}")
+                exit(1)
         else:
-            print("No more responses to evaluate.")
-            break
-    
-    resultSaver.__exit__(None, None, None)
-    promptReader.__exit__(None, None, None)
+            try:
+                if selected_guardrail_name in ["llamaguard"]:
+                    print(f"Loading guardrail {selected_guardrail_name} from disk...")
+                    guardrail = modelManager.loadModel(selected_guardrail_name)
+                else:
+                    raise ValueError("Guardrail not supported. Please choose from: Llamaguard")
+            except ValueError as e:
+                print(f"Error: {e}")
+                exit(1)
+
+        print(f"Using guardrail: {guardrail.get_model_info()['name']}")
+
+        #leggo le risposte precedenti una ad una e le valuto
+
+        print("do you wanna test the responses of llama, llama chat (not suggested) or mistral? (llama/llama chat/mistral)")
+        selected_model_name = input().strip().lower()
+
+        if selected_model_name == "llama":
+            file_name = "responsesLlama.jsonl"
+        elif selected_model_name == "llama chat":
+            file_name = "responsesLlamaChat.jsonl"
+        elif selected_model_name == "mistral":
+            file_name = "responsesMistral.jsonl"
+        else:
+            print("Invalid model name.")
+            return
+        
+        with open("constants.py", "w") as f:
+            f.write(f'PATH_TO_RESPONSES = "{constants.PATH_TO_RESPONSES}"\n')
+            f.write(f'CLASSIFIER_THRESHOLD = {constants.CLASSIFIER_THRESHOLD}\n')
+            f.write(f'PATH_TO_RESULTS = "{constants.PATH_TO_RESULTS}"\n')
+            f.write(f'CURRENT_GUARDRAIL = "{guardrail.get_model_info()['name']}"\n')
+            f.write(f'CURRENT_LLM = "{selected_model_name}"\n') 
+
+        promptReader = PromptReader(file_path=PATH_TO_RESPONSES, model_name=file_name)
+        promptReader.__enter__()
+
+        resultSaver = PromptSaver(file_path = PATH_TO_RESULTS, model_name = selected_guardrail_name)
+        resultSaver.__enter__()
+        
+        while True:
+            data = promptReader.getNextDict()
+            if data is not None:
+            #la valuto con LlamaGuard
+                chat = ParseDict().parser(selected_guardrail_name, selected_model_name, data)
+                final_response = guardrail.validate_response(chat)
+
+                #if isUnsafe == true it means that the LLM modify the 
+                # answer to make it safe ergo: the LLM detected the
+                # unsafeness of the prompt; else it considered it safe.
+                if data["isUnsafe"] is True:
+                    originalDetection = "unsafe"
+                else:
+                    originalDetection = "safe"
+
+                result = {
+                    "originalDetection": originalDetection,
+                    "guardrailDetection":final_response["status"],
+                    "groundTruth": data["type"] 
+                }
+                #PromptSaver.saveResponseOnJsonl(PATH_TO_RESULTS, result, selected_guardrail_name)
+                resultSaver.saveResponseOnJsonl(result)
+            else:
+                print("No more responses to evaluate.")
+                break
+        
+        resultSaver.__exit__(None, None, None)
+        promptReader.__exit__(None, None, None)
