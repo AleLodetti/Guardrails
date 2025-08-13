@@ -73,6 +73,7 @@ python -m venv .venv
 ## Installazione dei Requirements
 Ad ambiente virtuale attivo, si legge (venv) sul terminale, digitare sempre sul terminale:
 ```bash
+pip install -r requirements-dev.txt
 pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
 pip install -r requirments-gpu.txt
 ```
