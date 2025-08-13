@@ -1,12 +1,46 @@
-# 🔐 Guardrails and stuff
+# 🔐 Breaking the Guardrails
 
 ![Badge: Versione](https://img.shields.io/badge/version-1.0.0-blue.svg)
 ![Badge: Licenza](https://img.shields.io/badge/license-MIT-green.svg)
 ![Badge: Stato](https://img.shields.io/badge/status-attivo-success)
 
-Questo progetto mira a comprendere quando siano rischiosi gli LLM senza un fine tuning legato alle conversazioni non tossiche e quanto siano efficaci i vari guardrail utilizzabili come una "black box".
+This project aims to understand how effective various black-box guardrail systems for Large Language Models are. These systems aim to safeguard both the input and output channels of LLMs by dually detecting adversarial prompts and preventing the generation of unsafe responses.
 
-## 🧩 Caratteristiche
+## 🧩 Guardrails object of the study
+We present a systematic, empirical evaluation of four ready-to-use guardrail systems: Google's Perspective API, Guardrails AI's Detect Jailbreak, Azure's Prompt Shields, and Meta's LlamaGuard. 
+
+## 🔍 PerspectiveAPI
+### Requirements:
+* A Google account that includes Google Cloud
+* A project created in Google Cloud
+* The API key, which can be requested filling this [form](https://docs.google.com/forms/d/e/1FAIpQLSdhBBnVVVbXSElby-jhNnEj-Zwpt5toQSCFsJerGfpXW66CuQ/viewform). Remember to insert your API key in [perspectiveAPI.py](guardrails_project/Guardrails/perspectiveAPI.py).
+You can find further detail in PerspectiveAPI [documentation](https://developers.perspectiveapi.com/s/docs-get-started?language=en_US).
+## 🕵️‍♂️ Detect Jailbreak
+### Requirements:
+* Being registered on [Guardrails Hub](https://hub.guardrailsai.com/)
+* Create an API key on your profile
+* Install the requirements for the whole project (see below) which contain the **_guardrails-ai_ import**
+Now you can type the following commands:
+```bash
+guardrails configure (and this is when you'll need to paste your API key)
+guardrails hub install hub://guardrails/detect_jailbreak
+```
+Note: if **guardrails** is not recognized as a command, you may need to find the path to **guardrails.exe** and use that.
+Further information can be found on Guardrails AI [blog](https://www.guardrailsai.com/blog/advanced-pii-and-jailbreak).
+
+## 🛡️ Prompt Shields
+### Requirements:
+* An Azure subscription
+* Content Safety resource in the Azure portal to get your key and endpoint
+* cURL installed
+You can find further detail in Azure [documentation](https://learn.microsoft.com/en-us/azure/ai-services/content-safety/quickstart-jailbreak?pivots=programming-language-rest). Remember to insert your API key in [promptShields.py](guardrails_project/Guardrails/promptShields.py).
+From the command prompt, run:
+
+```bash
+pip install -r requirments-dev.txt
+```
+
+## 🦙 LlamaGuard: 
 
 - scaricamento di LLM quali Llama versione 2 7B, Mistral 7B e Llama Chat 7B. 
 - salvataggio in locale dei suddetti LLM con la possibilità di recuperare i modelli dal disco anziche scaricarli
@@ -22,10 +56,10 @@ Qui è descritta l'installazione su Windows (su linux è analoga, dovrebbe cambi
 Superato questo enorme scoglio, servono: Git, Python e Microsoft C++ Build Tools
 
 ### <img src="https://git-scm.com/images/logos/downloads/Git-Icon-1788C.png" alt="git logo" width="20"/> Git
-Per clonare la repo:
+Use this command to clone the repository:
 ```bash
 git clone https://github.com/AleLodetti/Guardrails/tree/main/guardrails_project
-cd tuo-repo
+cd your-repo
 ```
 
 ### <img src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" alt="Python Logo" width="20"/> Python 
@@ -46,14 +80,15 @@ python -m venv .venv
 ```
 
 ## Installazione dei Requirements
-Ad ambiente virtuale attivo, si legge (venv) sul terminale, digitare sempre sul terminale:
+When the virtual environment is activated, you can read (venv) on the terminal. Type the following commands:
 ```bash
+pip install -r requirements-dev.txt
 pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
 pip install -r requirments-gpu.txt
 ```
 
  # ▶️ Esecuzione
- Per eseguire il progetto digitare:
+To execute the project, type the following:
  ```bash
  python -m main
  ```
@@ -66,8 +101,11 @@ A questo punto compaiono dei comandi da eseguire da terminale; facile facile.
  # Developed
  Developed by:
 
- 📧 Mail: [lodetti.alessandro02@gmail.com]  
+📧 Mail: [lodetti.alessandro02@gmail.com]
 🔗 GitHub: [@AleLodetti](https://github.com/AleLodetti)
+
+ 📧 Mail: [silvia.parolin@mail.polimi.it]
+🔗 GitHub: [@silviaparolin](https://github.com/silviaparolin)
 
 ---
 
