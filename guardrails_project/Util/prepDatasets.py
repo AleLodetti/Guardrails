@@ -2,7 +2,7 @@ import os
 from guardrails_project import constants
 from guardrails_project.Guardrails.llamaGuard import LlamaGuard
 from guardrails_project.Guardrails.perspectiveAPI import runEvaluation as usePerspectiveAPI
-#from guardrails_project.Guardrails.detectJailbreak import runEvaluation as useDetectJailbreak
+from guardrails_project.Guardrails.detectJailbreak import runEvaluation as useDetectJailbreak
 from guardrails_project.Guardrails.promptShields import runEvaluation as usePromptShields
 from datasets import load_dataset, concatenate_datasets
 from guardrails_project.constants import *
@@ -91,12 +91,12 @@ def runGuardrailwithDataset(choice):
         )
     elif choice == "2":
         print("Starting the analysis of datasets using Detect Jailbreak. This may take a while...")
-       #useDetectJailbreak(
-        #   dataset=dataset,
-         #  num_samples=num_samples,
-          # text_column=text_column,
-           #label_column=label_column
-        #)
+        useDetectJailbreak(
+        dataset=dataset,
+        num_samples=num_samples,
+        text_column=text_column,
+        label_column=label_column
+        )
     elif choice == "3":
         print("Starting the analysis of datasets using Prompt Shields. This may take a while...")
         usePromptShields(

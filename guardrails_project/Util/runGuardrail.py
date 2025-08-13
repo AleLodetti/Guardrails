@@ -21,7 +21,7 @@ def runGuardrail(choice):
         guardrail = runGuardrailwithDataset(choice)
     elif choice == "2":
         selected_guardrail_name = "detectjailbreak"
-        #guardrail = runGuardrailwithDataset(choice)
+        guardrail = runGuardrailwithDataset(choice)
     elif choice == "3":
         guardrail = runGuardrailwithDataset(choice)
     elif choice == "4":
