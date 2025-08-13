@@ -23,7 +23,7 @@ def runEvaluation(dataset, num_samples, text_column, label_column):
 
 def check_prompt_perspective(text):
   attributes = ["TOXICITY", "SEVERE_TOXICITY", "THREAT", "INSULT", "OBSCENE", "IDENTITY_ATTACK", "SEXUALLY_EXPLICIT"]
-  API_KEY = 'AIzaSyC7o6K-yETMCTpPUVEFwt9wOSiv1abigJU'
+  API_KEY = 'your_api_key_here'  # Replace with your actual API key
   url = f"https://commentanalyzer.googleapis.com/v1alpha1/comments:analyze?key={API_KEY}"
   data = {
       'comment': {'text': text},
