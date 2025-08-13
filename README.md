@@ -47,10 +47,10 @@ Qui è descritta l'installazione su Windows (su linux è analoga, dovrebbe cambi
 Superato questo enorme scoglio, servono: Git, Python e Microsoft C++ Build Tools
 
 ### <img src="https://git-scm.com/images/logos/downloads/Git-Icon-1788C.png" alt="git logo" width="20"/> Git
-Per clonare la repo:
+Use this command to clone the repository:
 ```bash
 git clone https://github.com/AleLodetti/Guardrails/tree/main/guardrails_project
-cd tuo-repo
+cd your-repo
 ```
 
 ### <img src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" alt="Python Logo" width="20"/> Python 
@@ -71,7 +71,7 @@ python -m venv .venv
 ```
 
 ## Installazione dei Requirements
-Ad ambiente virtuale attivo, si legge (venv) sul terminale, digitare sempre sul terminale:
+When the virtual environment is activated, you can read (venv) on the terminal. Type the following commands:
 ```bash
 pip install -r requirements-dev.txt
 pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
@@ -79,7 +79,7 @@ pip install -r requirments-gpu.txt
 ```
 
  # ▶️ Esecuzione
- Per eseguire il progetto digitare:
+To execute the project, type the following:
  ```bash
  python -m main
  ```
