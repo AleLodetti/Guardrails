@@ -1,22 +1,22 @@
 import os
 from guardrails_project import constants
 from guardrails_project.Guardrails.llamaGuard import LlamaGuard
-from guardrails_project.Guardrails.perspectiveAPI import PerspectiveAPI
-from guardrails_project.Guardrails.detectJailbreak import DetectJailbreak
-from guardrails_project.Guardrails.promptShields import PromptShields
-
+from guardrails_project.Guardrails.perspectiveAPI import runEvaluation as usePerspectiveAPI
+#from guardrails_project.Guardrails.detectJailbreak import runEvaluation as useDetectJailbreak
+from guardrails_project.Guardrails.promptShields import runEvaluation as usePromptShields
+from datasets import load_dataset, concatenate_datasets
 from guardrails_project.constants import *
 
 
-def runGuardrail(choice):
+def runGuardrailwithDataset(choice):
     datasets = [
-    "JailbreakV-28K/JailBreakV-28k",
-    "allenai/wildjailbreak",
-    "lmsys/toxic-chat",
+    #"JailbreakV-28K/JailBreakV-28k",
+    #"allenai/wildjailbreak",
+    #"lmsys/toxic-chat",
     "JailbreakBench/JBB-Behaviors",
-    "allenai/wildguardmix",
-    "walledai/XSTest",
-    "TrustAIRLab/in-the-wild-jailbreak-prompts"
+    #"allenai/wildguardmix",
+    #"walledai/XSTest",
+    #"TrustAIRLab/in-the-wild-jailbreak-prompts"
     ]
 
     for selected_dataset in datasets:
@@ -81,34 +81,27 @@ def runGuardrail(choice):
             num_samples = len(dataset)
             text_column = "prompt"
             label_column = "jailbreak"
-    if choice == 1:
-        guardrail = PerspectiveAPI()
+    if choice == "1":
         print("Starting the analysis of datasets using PerspectiveAPI. This may take a while...")
-        guardrail.runEvaluation(
+        usePerspectiveAPI(
             dataset=dataset,
             num_samples=num_samples,
             text_column=text_column,
             label_column=label_column
         )
-        guardrail.saveResults()
-    elif choice == 2:
-        guardrail = DetectJailbreak()
+    elif choice == "2":
         print("Starting the analysis of datasets using Detect Jailbreak. This may take a while...")
-        guardrail.runEvaluation(
-            dataset=dataset,
-            num_samples=num_samples,
-            text_column=text_column,
-            label_column=label_column
-        )
-        guardrail.saveResults()
-    elif choice == 3:
-        guardrail = PromptShields()
+       #useDetectJailbreak(
+        #   dataset=dataset,
+         #  num_samples=num_samples,
+          # text_column=text_column,
+           #label_column=label_column
+        #)
+    elif choice == "3":
         print("Starting the analysis of datasets using Prompt Shields. This may take a while...")
-        guardrail.runEvaluation(
+        usePromptShields(
             dataset=dataset,
             num_samples=num_samples,
             text_column=text_column,
             label_column=label_column
         )
-        guardrail.saveResults()
-    return guardrail

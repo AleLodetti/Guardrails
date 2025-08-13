@@ -21,10 +21,11 @@ def analyse_dataset_azure(dataset, num_samples, text_column, label_column):
   detected_cases = 0
   true_labels = []  # all 1s (attacks)
   predicted_labels = []  # predicted: 1 if attackDetected else 0
-
+#note: you need to obtain an Azure subscription key and set it in the headers
+  # for the API to work.
   url = 'https://guardrailazure.cognitiveservices.azure.com/contentsafety/text:shieldPrompt?api-version=2024-09-01'
   headers = {
-      'Ocp-Apim-Subscription-Key': '7CH3bSSMbE7fNmXpGzXEz4cvNnAQMFYoy7m0LbcMQzZJE2DC71vNJQQJ99BGACgEuAYXJ3w3AAAHACOGujnu',
+      'Ocp-Apim-Subscription-Key': 'your_subscription_key_here',
       'Content-Type': 'application/json'
   }
 

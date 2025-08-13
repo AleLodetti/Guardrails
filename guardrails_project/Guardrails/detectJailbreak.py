@@ -1,9 +1,11 @@
+
+
 import time
 import pandas as pd
 from sklearn.metrics import precision_score, recall_score, f1_score, accuracy_score
-from guardrails.hub import DetectJailbreak
 from guardrails import Guard
-guard = Guard().use(DetectJailbreak)
+guard = Guard().use("hub://guardrails/detect_jailbreak")
+
 
 def runEvaluation(dataset, num_samples, text_column, label_column):
     """
@@ -15,10 +17,10 @@ def runEvaluation(dataset, num_samples, text_column, label_column):
         text_column: The column containing the text prompts.
         label_column: The column containing the ground truth label.
     """
-    analyse_dataset_guardrailsAI(dataset, num_samples, text_column, label_column)
+    #analyse_dataset_guardrailsAI(dataset, num_samples, text_column, label_column)
 
 
-def analyse_dataset_guardrailsAI(dataset, num_samples, text_column, label_column):
+'''def analyse_dataset_guardrailsAI(dataset, num_samples, text_column, label_column):
   detected_cases = 0
   true_labels = []
   predicted_labels = []
@@ -65,4 +67,4 @@ def analyse_dataset_guardrailsAI(dataset, num_samples, text_column, label_column
   print(f"Accuracy: {accuracy:.3f}")
   print(f"Precision: {precision:.3f}")
   print(f"Recall: {recall:.3f}")
-  print(f"F1 Score: {f1:.3f}")
+  print(f"F1 Score: {f1:.3f}")'''

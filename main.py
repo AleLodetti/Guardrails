@@ -27,31 +27,32 @@ if __name__ == "__main__":
                 print("Invalid choice. Please enter a number between 1 and 5.")
         if choice == "1":
             print("You have selected PerspectiveAPI.")
-            runGuardrail()
+            runGuardrail(choice)
         elif choice == "2":
             print("You have selected Detect Jailbreak.")
-            runGuardrail()
+            runGuardrail(choice)
         elif choice == "3":
             print("You have selected Prompt Shields.")
-            runGuardrail()
+            runGuardrail(choice)
         elif choice == "4":
-            print("You have selected Llama Guard. Do you want to instantiate a LLM and run it, do you want to run the tests or do you want to analyze the metrics? (llm/test/analyze)  ")
-            choice = input().strip().lower()
+            while True:
+                print("You have selected Llama Guard. Do you want to instantiate a LLM and run it, do you want to run the tests or do you want to analyze the metrics? (llm/test/analyze)  ")
+                choice = input().strip().lower()
 
-            if choice == "llm":
-                instantiateModelAndFillFile()
-            elif choice == "test":
-                runGuardrail()
-            elif choice == "analyze":
-                analyzeMetrics()
-            else:
-                print("Invalid choice. Please enter 'llm' or 'test!!! ")
-                continue
-            print("Do you want to run another operation? (Y/n)")
-            another_operation = input().strip().lower()
-            if another_operation != 'y':
-                print("Exiting the program.")
-                break
+                if choice == "llm":
+                    instantiateModelAndFillFile()
+                elif choice == "test":
+                    runGuardrail()
+                elif choice == "analyze":
+                    analyzeMetrics()
+                else:
+                    print("Invalid choice. Please enter 'llm' or 'test!!! ")
+                    continue
+                print("Do you want to run another operation? (Y/n)")
+                another_operation = input().strip().lower()
+                if another_operation != 'y':
+                    print("Exiting the program.")
+                    break
         print("Do you want to use another guardrail? (Y/n)")
         another_operation = input().strip().lower()
         if another_operation != 'y':

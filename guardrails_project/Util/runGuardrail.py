@@ -1,9 +1,6 @@
 import os
 from guardrails_project import constants
 from guardrails_project.Guardrails.llamaGuard import LlamaGuard
-from guardrails_project.Guardrails.perspectiveAPI import PerspectiveAPI
-from guardrails_project.Guardrails.detectJailbreak import DetectJailbreak
-from guardrails_project.Guardrails.promptShields import PromptShields
 from guardrails_project.LLMs.llmsFactory import LLMsFactory
 from guardrails_project.DataLoader.dataset_loader import DatasetLoader
 from itertools import islice
@@ -12,22 +9,22 @@ from guardrails_project.Util.answerReader import PromptReader
 from guardrails_project.Util.answerSaver import PromptSaver
 from guardrails_project.Util.checkResponse import CheckResponse
 from guardrails_project.Util.parseDict import ParseDict
-from guardrails_project.Util.prepDatasets import runGuardrail
+from guardrails_project.Util.prepDatasets import runGuardrailwithDataset
 from guardrails_project.constants import *
 
 def runGuardrail(choice):
     """
     Main function to run the guardrail evaluation. 
     """
-    if choice == 1:
+    if choice == "1":
         selected_guardrail_name = "perspectiveapi"
-        guardrail = runGuardrail(choice)
-    elif choice == 2:
+        guardrail = runGuardrailwithDataset(choice)
+    elif choice == "2":
         selected_guardrail_name = "detectjailbreak"
-        guardrail = runGuardrail(choice)
-    elif choice == 3:
-        guardrail = runGuardrail(choice)
-    else:
+        #guardrail = runGuardrailwithDataset(choice)
+    elif choice == "3":
+        guardrail = runGuardrailwithDataset(choice)
+    elif choice == "4":
     #selected_guardrail_name = input("which guardrail do you want to use between Llamaguard and ...?").strip().lower()
         selected_guardrail_name = "llamaguard"
         instantiate = input("do you want to instantiate the model? (Y/n): ").strip().lower()
