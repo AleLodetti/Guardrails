@@ -9,3 +9,8 @@ matplotlib
 sentencepiece
 protobuf<6.0.0,>=5.29.1
 pandas
+detoxify
+huggingface_hub
+fsspec
+guardrails-ai
+scikit-learn
