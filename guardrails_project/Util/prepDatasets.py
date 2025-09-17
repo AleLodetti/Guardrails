@@ -12,13 +12,13 @@ from guardrails_project.constants import *
 
 def runGuardrailwithDataset(choice):
     datasets = [
-    #"JailbreakV-28K/JailBreakV-28k",
-    #"allenai/wildjailbreak",
-    #"lmsys/toxic-chat",
+    "JailbreakV-28K/JailBreakV-28k",
+    "allenai/wildjailbreak",
+    "lmsys/toxic-chat",
     "JailbreakBench/JBB-Behaviors",
-    #"allenai/wildguardmix",
-    #"walledai/XSTest",
-    #"TrustAIRLab/in-the-wild-jailbreak-prompts"
+    "allenai/wildguardmix",
+    "walledai/XSTest",
+    "TrustAIRLab/in-the-wild-jailbreak-prompts"
     ]
 
     for selected_dataset in datasets:
