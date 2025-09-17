@@ -1,4 +1,6 @@
 #a function to extract answers from llama chat
+from ast import Constant
+from guardrails_project import constants
 from guardrails_project.Util import analyze
 from guardrails_project.Util.instantiateModelAndFillFile import instantiateModelAndFillFile
 from guardrails_project.Util.runGuardrail import runGuardrail
@@ -11,8 +13,6 @@ if __name__ == "__main__":
     The user can instantiate a model and fill a file with responses or run guardrail tests on existing responses.
     The script will continue to prompt the user for actions until they choose to exit.
     """
-
-    #torch.cuda.empty_cache()
 
     while True:
         while True:
@@ -42,8 +42,10 @@ if __name__ == "__main__":
                 choice = input().strip().lower()
 
                 if choice == "llm":
+                    constants.insert_token()
                     instantiateModelAndFillFile()
                 elif choice == "test":
+                    constants.insert_guardrail_token();
                     runGuardrail()
                 elif choice == "analyze":
                     analyzeMetrics()
@@ -61,4 +63,5 @@ if __name__ == "__main__":
             print("Exiting the program.")
             break
     print("Thank you for using the script!")
+
         
