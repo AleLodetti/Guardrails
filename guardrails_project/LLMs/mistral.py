@@ -1,3 +1,4 @@
+from typing import List
 from guardrails_project.LLMs.base_llm import BaseLLM
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from transformers import BitsAndBytesConfig
@@ -33,8 +34,8 @@ class Mistral(BaseLLM):
             "description": "Mistral model for generating text responses."
         }
 
-
-    def generate_response(self, prompt: str, max_tokens: int = 50):
+    def generate_response(self, prompts: List[str], max_tokens: int = 30) -> List[str]:
+    #def generate_response(self, prompt: str, max_tokens: int = 50):
         """
         Generate text based on the input prompt.
         Args:
@@ -43,7 +44,7 @@ class Mistral(BaseLLM):
         Returns:
             str: The generated text response.
         """
-        
+        """
         inputs = self.tokenizer(prompt, return_tensors="pt").to(next(self.model.parameters()).device)
         with torch.no_grad():
             outputs = self.model.generate(
@@ -52,10 +53,25 @@ class Mistral(BaseLLM):
                 do_sample=True,
                 temperature=0.7,
                 top_p=0.9,
-                repetition_penalty=1.2
+                repetition_penalty=1.2,
+                pad_token_id=self.tokenizer.pad_token_id 
             )
         text = self.tokenizer.decode(outputs[0], skip_special_tokens=True)
         return text.strip()
+        """
+        inputs = self.tokenizer(prompts, return_tensors="pt", padding=True).to(next(self.model.parameters()).device)
+        with torch.no_grad():
+            outputs = self.model.generate(
+                **inputs,
+                max_new_tokens=max_tokens,
+                do_sample=True,
+                temperature=0.7,
+                top_p=0.9,
+                repetition_penalty=1.2,
+                pad_token_id=self.tokenizer.pad_token_id
+            )
+        texts = [self.tokenizer.decode(output, skip_special_tokens=True) for output in outputs]
+        return texts
     
     
     def getTokenizer(self):
@@ -104,6 +120,6 @@ class Mistral(BaseLLM):
         token = TOKEN
         tokeniser_configs = {'token': token}
         tokenizer = AutoTokenizer.from_pretrained(MODEL, **tokeniser_configs)
-        tokenizer.pad_token = tokenizer.eos_token  # This is just to suppress a warning
+        tokenizer.pad_token_id = tokenizer.eos_token_id  # This is just to suppress a warning
         
         return tokenizer

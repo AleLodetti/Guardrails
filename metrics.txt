@@ -1,13 +1,102 @@
-Evaluation metrics, for {selected_model_name}
+Evaluation metrics, for llamaguard
 ----------------------------
 
-LLM (this is the original result given by the LLM,
- note that the specific LLM is impossible to retrieve)
+LLM: mistral
 Precision: 1.0000
-Recall:    0.0522
-F1-score:  0.0992
+Recall:    0.0100
+F1-score:  0.0198
 
-Guardrail Detection
+Guardrail: LlamaGuard
 Precision: 1.0000
-Recall:    0.6000
-F1-score:  0.7500
+Recall:    0.5800
+F1-score:  0.7342
+Evaluation metrics, for llamaguard
+----------------------------
+
+LLM: mistral
+Precision: 0.4318
+Recall:    0.0950
+F1-score:  0.1557
+
+Guardrail: LlamaGuard
+Precision: 0.9130
+Recall:    0.6300
+F1-score:  0.7456
+
+Evaluation metrics, for llamaguard
+----------------------------
+
+LLM: mistral
+Precision: 1.0000
+Recall:    0.0300
+F1-score:  0.0583
+
+Guardrail: LlamaGuard
+Precision: 0.9412
+Recall:    0.6400
+F1-score:  0.7619
+Evaluation metrics, for llamaguard
+----------------------------
+
+LLM: mistral
+Precision: 0.2308
+Recall:    0.1081
+F1-score:  0.1472
+
+Guardrail: LlamaGuard
+number of detections: 0
+Precision: 0.1458
+Recall:    0.1892
+F1-score:  0.1647
+Evaluation metrics, for llamaguard
+----------------------------
+
+LLM: mistral
+Precision: 0.2308
+Recall:    0.1081
+F1-score:  0.1472
+
+Guardrail: LlamaGuard
+number of detections: 144
+Precision: 0.1458
+Recall:    0.1892
+F1-score:  0.1647
+Evaluation metrics, for llamaguard
+----------------------------
+
+LLM: mistral
+Precision: 0.9189
+Recall:    0.0170
+F1-score:  0.0334
+
+Guardrail: LlamaGuard
+number of detections: 313
+Precision: 0.9936
+Recall:    0.1555
+F1-score:  0.2689
+Evaluation metrics, for llamaguard
+----------------------------
+
+LLM: mistral
+Precision: 0.9375
+Recall:    0.0245
+F1-score:  0.0478
+
+Guardrail: LlamaGuard
+number of detections: 226
+Precision: 0.9513
+Recall:    0.1758
+F1-score:  0.2968
+Evaluation metrics, for llamaguard
+----------------------------
+
+LLM: mistral
+Precision: 0.8000
+Recall:    0.0606
+F1-score:  0.1127
+
+Guardrail: LlamaGuard
+number of detections: 10
+Precision: 1.0000
+Recall:    0.1515
+F1-score:  0.2632

@@ -6,7 +6,7 @@ class ToxicChat(SuperDataset):
     """this dataset can be filtered?"""
 
     def __init__(self):
-        super.__init__()
+        super().__init__()
     
     def loadData(self):
         selected_dataset = "lmsys/toxic-chat"
@@ -28,9 +28,9 @@ class ToxicChat(SuperDataset):
                   es: {'prompt': 'What is 2+2?', 'type': 'safe'}
         """
 
-        prompt = item.get("user input", "")
+        prompt = item.get("user_input", "").strip()
 
-        if item.get("jailbreaking", "").strip() == "1":
+        if item.get("jailbreaking", "") == 1:
             typePrompt = "unsafe"
         else:
             typePrompt = "safe"

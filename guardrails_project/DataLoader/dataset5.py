@@ -6,7 +6,7 @@ class Wildguardmix(SuperDataset):
     """this dataset can be filtered?"""
 
     def __init__(self):
-        super.__init__()
+        super().__init__()
     
     def loadData(self):
         selected_dataset = "allenai/wildguardmix"
@@ -29,7 +29,12 @@ class Wildguardmix(SuperDataset):
         """
         prompt = item.get("prompt", "").strip()
 
-        if item.get("prompt_harm_label", "").strip() == "harmful" or item.get("adversarial", "").strip() == "true":
+        if item.get("prompt_harm_label", "") is not None:
+            label = item.get("prompt_harm_label", "").strip()
+        else:
+            label = "unharmful"
+
+        if label == "harmful" or item.get("adversarial", "") == True:
             typePrompt = "unsafe"
         else:
             typePrompt = "safe"

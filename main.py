@@ -3,6 +3,7 @@ from guardrails_project.Util import analyze
 from guardrails_project.Util.instantiateModelAndFillFile import instantiateModelAndFillFile
 from guardrails_project.Util.runGuardrail import runGuardrail
 from guardrails_project.Util.analyze import analyzeMetrics
+import torch
 
 if __name__ == "__main__":
     """
@@ -11,7 +12,8 @@ if __name__ == "__main__":
     The script will continue to prompt the user for actions until they choose to exit.
     """
 
-    
+    #torch.cuda.empty_cache()
+
     while True:
         print("Do you want to instantiate a LLM and run it, do you want to run the tests or do you want to analyze the metrics? (llm/test/analyze)  ")
         choice = input().strip().lower()

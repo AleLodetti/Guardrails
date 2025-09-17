@@ -48,12 +48,11 @@ class LlamaGuard(BaseGuard):
         """
         prompt = self.tokenizer.apply_chat_template(chat, tokenize=False, add_generation_prompt=True)
         inputs = self.tokenizer(prompt, return_tensors="pt").to(self.model.device)
-        print(f"[DEBUG] model device: {self.model.device}")
-        print(f"[DEBUG] Input device: {inputs['input_ids'].device}")
+
         with torch.no_grad():
                 output = self.model.generate(
                     **inputs,
-                    max_new_tokens=20,
+                    max_new_tokens=50,
                     pad_token_id=self.tokenizer.eos_token_id
                 )
 
@@ -67,6 +66,62 @@ class LlamaGuard(BaseGuard):
             "reason": reason.strip() if reason else None,
             #"chat": chat
         }
+
+    def validate_responses(self, chats: list[dict]) -> list[dict]:
+        """
+        Validate multiple chats in batch using LlamaGuard.
+
+        Args:
+            chats (list[dict]): List of dictionaries with prompt and response.
+
+        Returns:
+            list[dict]: List of validation results.
+        """
+        # Applica il chat template a tutti i messaggi
+        prompts = [
+            self.tokenizer.apply_chat_template(chat, tokenize=False, add_generation_prompt=True)
+            for chat in chats
+        ]
+
+        # Tokenizza in batch
+        inputs = self.tokenizer(
+            prompts, 
+            return_tensors="pt", 
+            padding=True,
+            #truncation=True
+        ).to(self.model.device)
+
+        with torch.no_grad():
+            outputs = self.model.generate(
+                **inputs,
+                max_new_tokens=10,
+                pad_token_id=self.tokenizer.pad_token_id,
+                eos_token_id=self.tokenizer.eos_token_id
+            )
+
+        results = []
+        for i, output in enumerate(outputs):
+            # Prendi solo la parte generata
+            generated_tokens = output[inputs['input_ids'].shape[-1]:]
+            if generated_tokens.numel() == 0:
+                raw_output = ""
+            else:
+                raw_output = self.tokenizer.decode(generated_tokens, skip_special_tokens=True).strip()
+
+            try:
+                status, category, reason = self.parseRawOutput(raw_output)
+            except Exception:
+                status, category, reason = "unknown", "unknown", None
+
+            results.append({
+                "status": status.strip().lower(),
+                "category": category.strip().upper() if category else "UNKNOWN",
+                "reason": reason.strip() if reason else None,
+                "raw_output": raw_output,
+                "chat": chats[i]
+            })
+
+        return results
 
     def parseRawOutput(self, raw_output: str):
         raw_output = raw_output.strip()

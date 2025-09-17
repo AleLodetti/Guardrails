@@ -1,15 +1,19 @@
+from constants import GUARDRAIL_TOKEN
 from guardrails_project.DataLoader.superDataset import SuperDataset
 from datasets import load_dataset
+from huggingface_hub import login
 import pandas as pd
 
 class Wildjailbreak(SuperDataset):
     """this dataset can be filtered?"""
 
     def __init__(self):
-        super.__init__()
+        super().__init__()
     
     def loadData(self):
-        return load_dataset("allenai/wildjailbreak", "eval")["train"]
+        login(token = GUARDRAIL_TOKEN)
+        ds = load_dataset("allenai/wildjailbreak", "eval")["train"]
+        return ds
 
     def parseInput(self, item: dict) -> dict:
         """
@@ -23,7 +27,7 @@ class Wildjailbreak(SuperDataset):
             dict: Un dizionario con le chiavi 'prompt' e 'type'
                   es: {'prompt': 'What is 2+2?', 'type': 'safe'}
         """
-        prompt = item.get("user_input", "").strip()
+        prompt = item.get("adversarial", "").strip()
         #type_of_prompt = item.get("Type", "").strip().lower()  # safe o unsafe
 
         if item.get("data_type", "").strip() == "adversarial_harmful":

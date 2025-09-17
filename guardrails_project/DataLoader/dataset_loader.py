@@ -2,7 +2,7 @@
 from datasets import load_dataset
 import pandas as pd
 
-from guardrails_project.DataLoader.dataset1 import JailbreakBench
+from guardrails_project.DataLoader.dataset1 import JailbreakBenchBadDataset, JailbreakBenchGoodDataset
 from guardrails_project.DataLoader.dataset2 import JailbreakV_28K
 from guardrails_project.DataLoader.dataset3 import Wildjailbreak
 from guardrails_project.DataLoader.dataset4 import ToxicChat
@@ -21,38 +21,42 @@ class DatasetLoader:
             dataset: The loaded dataset.
         """
         print("Select a dataset to load:")
-        print("1 - JailbreakBench Behaviors (HuggingFace)")
+        print("1 - JailbreakBench Harmful Behaviors (HuggingFace)")
         print("2 - JailBreakV_28K (this one only contains adversarial prompts)")
         print("3 - WIldjailbreak")
         print("4 - ToxicChat")
         print("5 - Wildguardmix")
         print("6 - XSTest")
         print("7 - CSV file")
+        print("8 - JailbreakBench good Behaviors (HuggingFace)")
 
         choice = input("Enter your choice (1/2): ").strip()
 
         #here I instantiate the correct dataset as an object and then I load it by using its methods.
         if choice == "1":
-            dataset = JailbreakBench()
-            return dataset.loadData()
+            dataset = JailbreakBenchBadDataset()
+            return dataset
         elif choice == "2":
             dataset = JailbreakV_28K() 
-            return dataset.loadData()
+            return dataset
         elif choice == "3":
             dataset = Wildjailbreak() ###
-            return dataset.loadData()
+            return dataset
         elif choice == "4":
             dataset = ToxicChat()
-            return dataset.loadData()
+            return dataset
         elif choice == "5":
             dataset = Wildguardmix() ###
-            return dataset.loadData()
+            return dataset
         elif choice == "6":
             dataset = XSTest()
-            return dataset.loadData()
+            return dataset
         elif choice == "7":
             dataset = CSVfile()
-            return dataset.loadData()
+            return dataset
+        elif choice == "8":
+            dataset = JailbreakBenchGoodDataset()
+            return dataset
         else:
             print("Invalid choice")
             return None

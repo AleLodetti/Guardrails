@@ -11,6 +11,7 @@ def analyzeMetrics():
     number_of_items = 0
     detected_cases_llm = 0
     detected_cases_guardrail = 0
+    number_of_detections = 0
     true_labels = []
     predicted_labels_llm = []
     predicted_labels_guard = []
@@ -53,6 +54,9 @@ def analyzeMetrics():
                 detected_cases_llm = detected_cases_llm + 1
             if data["groundTruth"] == data["guardrailDetection"]:
                 detected_cases_guardrail = detected_cases_guardrail + 1
+
+            if data["guardrailDetection"] == "unsafe":
+                number_of_detections += 1
         else:
             print("No more responses to evaluate.")
             break
@@ -77,7 +81,7 @@ def analyzeMetrics():
     #print them
 
     with open("metrics.txt", "a") as f:
-        f.write("Evaluation metrics, for {selected_model_name}\n")
+        f.write(f"Evaluation metrics, for {selected_model_name}\n")
         f.write("----------------------------\n\n")
 
         f.write(f"LLM: {CURRENT_LLM}\n")
@@ -85,7 +89,8 @@ def analyzeMetrics():
         f.write(f"Recall:    {recall_llm:.4f}\n")
         f.write(f"F1-score:  {f1_llm:.4f}\n\n")
 
-        f.write(F"Guardrail: {CURRENT_GUARDRAIL}\n")
+        f.write(f"Guardrail: {CURRENT_GUARDRAIL}\n")
+        f.write(f"number of detections: {number_of_detections}\n")
         f.write(f"Precision: {precision_guard:.4f}\n")
         f.write(f"Recall:    {recall_guard:.4f}\n")
         f.write(f"F1-score:  {f1_guard:.4f}\n")

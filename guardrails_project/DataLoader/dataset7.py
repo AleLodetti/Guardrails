@@ -6,18 +6,16 @@ class CSVfile(SuperDataset):
     """this dataset can be filtered?"""
 
     def __init__(self):
-        super.__init__()
+        super().__init__()
     
     def loadData(self):
-        ds1 = load_dataset('TrustAIRLab/in-the-wild-jailbreak-prompts', 'jailbreak_2023_05_07', split='train')
-        ds2 = load_dataset('TrustAIRLab/in-the-wild-jailbreak-prompts', 'jailbreak_2023_12_25', split='train')
-        ds3 = load_dataset('TrustAIRLab/in-the-wild-jailbreak-prompts', 'regular_2023_05_07', split='train')
+        #ds1 = load_dataset('TrustAIRLab/in-the-wild-jailbreak-prompts', 'jailbreak_2023_05_07', split='train')
+        #ds2 = load_dataset('TrustAIRLab/in-the-wild-jailbreak-prompts', 'jailbreak_2023_12_25', split='train')
+        ds3 = load_dataset('TrustAIRLab/in-the-wild-jailbreak-prompts', 'regular_2023_12_25', split='train')
 
-        # Esempio per unirli
-        combined = concatenate_datasets([ds1, ds2, ds3])
+        #combined = concatenate_datasets([ds1, ds2, ds3])
 
-        return combined
-
+        return ds3
 
     def parseInput(self, item: dict) -> dict:
         """
@@ -34,7 +32,7 @@ class CSVfile(SuperDataset):
         prompt = item.get("prompt", "").strip()
         #type_of_prompt = item.get("Type", "").strip().lower()  # safe o unsafe
 
-        if item.get("jailbreak", "").strip() == "true":
+        if item.get("jailbreak", "") == True:
             typePrompt = "unsafe"
         else:
             typePrompt = "safe"

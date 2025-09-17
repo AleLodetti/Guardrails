@@ -5,7 +5,7 @@ import pandas as pd
 #this dataset contains only unsafe prompt
 class JailbreakV_28K(SuperDataset):
     def __init__(self):
-        super.__init__()
+        super().__init__()
     
     def loadData(self):
         return load_dataset("JailbreakV-28K/JailBreakV-28k", split="JailBreakV_28K")["mini_JailBreakV_28K"]  # Adjust this key for other datasets

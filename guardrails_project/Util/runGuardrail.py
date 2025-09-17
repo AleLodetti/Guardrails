@@ -7,7 +7,6 @@ from itertools import islice
 from guardrails_project.Util import modelManager
 from guardrails_project.Util.answerReader import PromptReader
 from guardrails_project.Util.answerSaver import PromptSaver
-from guardrails_project.Util.checkResponse import CheckResponse
 from guardrails_project.Util.parseDict import ParseDict
 from guardrails_project.constants import *
 
@@ -55,11 +54,13 @@ def runGuardrail():
         print("Invalid model name.")
         return
     
-    with open("constants.py", "w") as f:
+    with open("guardrails_project/constants.py", "w") as f:
+        f.write(f'TOKEN = "{constants.TOKEN}"\n')
+        f.write(f'GUARDRAIL_TOKEN = "{constants.GUARDRAIL_TOKEN}"\n')
         f.write(f'PATH_TO_RESPONSES = "{constants.PATH_TO_RESPONSES}"\n')
         f.write(f'CLASSIFIER_THRESHOLD = {constants.CLASSIFIER_THRESHOLD}\n')
         f.write(f'PATH_TO_RESULTS = "{constants.PATH_TO_RESULTS}"\n')
-        f.write(f'CURRENT_GUARDRAIL = "{guardrail.get_model_info()['name']}"\n')
+        f.write(f"CURRENT_GUARDRAIL = \"{guardrail.get_model_info()['name']}\"\n")
         f.write(f'CURRENT_LLM = "{selected_model_name}"\n') 
 
     promptReader = PromptReader(file_path=PATH_TO_RESPONSES, model_name=file_name)
@@ -68,9 +69,12 @@ def runGuardrail():
     resultSaver = PromptSaver(file_path = PATH_TO_RESULTS, model_name = selected_guardrail_name)
     resultSaver.__enter__()
     
+    """
+    i = 0
     while True:
         data = promptReader.getNextDict()
         if data is not None:
+            i = i + 1
         #la valuto con LlamaGuard
             chat = ParseDict().parser(selected_guardrail_name, selected_model_name, data)
             final_response = guardrail.validate_response(chat)
@@ -90,9 +94,87 @@ def runGuardrail():
             }
             #PromptSaver.saveResponseOnJsonl(PATH_TO_RESULTS, result, selected_guardrail_name)
             resultSaver.saveResponseOnJsonl(result)
+            if i == 20:
+                i = 0
+                print("other 20 prompts have been processed")
         else:
             print("No more responses to evaluate.")
             break
-    
+    """
+    batch_size = 4
+    max_token = 4500
+    batch_chats = []
+    batch_data = []
+    i = 0
+
+    while True:
+        data = promptReader.getNextDict()
+        if data is None:
+            if batch_chats:  # processa eventuali rimanenze
+                results = guardrail.validate_responses(batch_chats)
+                for res, d in zip(results, batch_data):
+                    originalDetection = "unsafe" if d["isUnsafe"] else "safe"
+                    result = {
+                        "originalDetection": originalDetection,
+                        "guardrailDetection": res["status"],
+                        "groundTruth": d["type"]
+                    }
+                    resultSaver.saveResponseOnJsonl(result)
+            print("No more responses to evaluate.")
+            break
+
+        # prepara la chat per LlamaGuard
+        chat = ParseDict().parser(selected_guardrail_name, selected_model_name, data)
+        
+        #controllo i token
+        template = guardrail.getTokenizer().apply_chat_template(
+            chat,
+            tokenize=False,
+            add_generation_prompt=True
+        )
+        chat_token = len(guardrail.getTokenizer()(template)["input_ids"])
+        prospect = max_token - chat_token
+        print(prospect)
+        
+        #in this case i need to skip
+        if prospect < -700:
+            results = guardrail.validate_responses(batch_chats)
+            for res, d in zip(results, batch_data):
+                originalDetection = "unsafe" if d["isUnsafe"] else "safe"
+                result = {
+                    "originalDetection": originalDetection,
+                    "guardrailDetection": res["status"],
+                    "groundTruth": d["type"]
+                }
+                resultSaver.saveResponseOnJsonl(result)
+
+            batch_chats = []
+            batch_data = []
+            max_token = 4500
+
+            print(f"{i} prompts processed so far.")
+        
+        batch_chats.append(chat)
+        batch_data.append(data)
+        max_token = prospect
+        i += 1
+
+        # processa il batch se pieno
+        if max_token <= 0 and prospect >= -700:
+            results = guardrail.validate_responses(batch_chats)
+            for res, d in zip(results, batch_data):
+                originalDetection = "unsafe" if d["isUnsafe"] else "safe"
+                result = {
+                    "originalDetection": originalDetection,
+                    "guardrailDetection": res["status"],
+                    "groundTruth": d["type"]
+                }
+                resultSaver.saveResponseOnJsonl(result)
+
+            batch_chats = []
+            batch_data = []
+            max_token = 4500
+            print(f"{i} prompts processed so far.")
+
     resultSaver.__exit__(None, None, None)
     promptReader.__exit__(None, None, None)
