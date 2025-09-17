@@ -42,18 +42,21 @@ pip install -r requirments-dev.txt
 
 ## 🦙 LlamaGuard: 
 
-- scaricamento di LLM quali Llama versione 2 7B, Mistral 7B e Llama Chat 7B. 
-- salvataggio in locale dei suddetti LLM con la possibilità di recuperare i modelli dal disco anziche scaricarli
-- scaricamento di Guardrail quali Llamaguard 7B
-- salvataggio in locale dei suddetti Guardrail
-- possibilità di scegliere il dataset che si preferisce (tra quelli proposti)
-- salvataggio e recupero delle rispsote date dagli LLM sul un dataset generico
-- stime dei risultati attraverso l'utilizzo di un guardrail.
 
-## 📦 Installazione
-Per poter funzionare necessità di una GPU Nvidia, se non ce l'hai problema tuo. 
-Qui è descritta l'installazione su Windows (su linux è analoga, dovrebbe cambiare solo la parte legata a Microsoft C++ Build Tools).
-Superato questo enorme scoglio, servono: Git, Python e Microsoft C++ Build Tools
+- Downloading LLMs such as Llama version 2 7B, Mistral 7B, and Llama Chat 7B.
+- Local saving of the aforementioned LLMs with the option of recovering the models from disk instead of downloading them.
+- Downloading Guardrails such as Llamaguard 7B
+- Local saving of the aforementioned Guardrails
+- Option to select the preferred dataset (from those proposed)
+- Saving and retrieving the responses given by the LLMs on a generic dataset
+- Result estimations using a guardrail.
+
+
+
+## 📦 Installation
+To run, you need an Nvidia GPU. If you don't have one, that's your problem.
+The installation on Windows is described here (on Linux, it's similar, only the part related to Microsoft C++ Build Tools should change).
+Once you've overcome this huge obstacle, you'll need: Git, Python, and Microsoft C++ Build Tools.
 
 ### <img src="https://git-scm.com/images/logos/downloads/Git-Icon-1788C.png" alt="git logo" width="20"/> Git
 Use this command to clone the repository:
@@ -63,23 +66,23 @@ cd your-repo
 ```
 
 ### <img src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" alt="Python Logo" width="20"/> Python 
-Io utilizzo Python 3.11 (l'utlima versione forse non va). Per installare Python vai su https://www.python.org/downloads/ e durante l'installazione SPUNTA "add python to Path" (subito all'inizio) ed installa anche pip. Per verificare
+I'm using Python 3.11 (the latest version may not work). To install Python, go to https://www.python.org/downloads/ and during the installation, CHECK "add python to Path" (right at the beginning) and also install pip. To verify
 ```bash
 python --version (o py --version)
 pip --version
 ```
 
 ### <img src="https://visualstudio.microsoft.com/wp-content/uploads/2021/10/Product-Icon.svg" alt="msvc logo" width="20"/> Microsoft C++ Build Tools
-Alcuni pacchetti che verranno installati nei requirements richiedono C++ per essere compilati perciò durante l'installazione di questo tool è necessario spuntare "Desktop development with C++" e "C++ CMake tools for Windows". Può essere scricato a questo link https://visualstudio.microsoft.com/visual-cpp-build-tools/
+Some packages that will be installed in the requirements require C++ to be compiled, so when installing this tool, you must check "Desktop development with C++" and "C++ CMake tools for Windows." It can be downloaded from this link: https://visualstudio.microsoft.com/visual-cpp-build-tools/
 
-## Creazione dell'ambiente virtuale
-Una volta pullata la repo, spostarsi nella root del progetto da PowerShell o da terminale VSCode e digitare:
+## Creating the Virtual Environment
+Once the repo is pulled, navigate to the project root using PowerShell or the VSCode terminal and type:
 ```powershell
 python -m venv .venv
-.venv\Scripts\Activate.ps1 #su PowerShell runnata come amministratiore
+.venv\Scripts\Activate.ps1 #on PowerShell run as admin
 ```
 
-## Installazione dei Requirements
+## Installation of all the Requirements
 When the virtual environment is activated, you can read (venv) on the terminal. Type the following commands:
 ```bash
 pip install -r requirements-dev.txt
@@ -92,9 +95,9 @@ To execute the project, type the following:
  ```bash
  python -m main
  ```
-A questo punto compaiono dei comandi da eseguire da terminale; facile facile.
+At this point, some commands to run from the terminal appear; easy peasy.
 
- Potrebberro verificarsi errori legati alle librerie non lette, in tal caso semplicemente pip uninstall libreria e pip install libreria e dovrebbe sistemarsi.
+You may encounter errors related to unread libraries; in that case, simply pip uninstall library and pip install library, and it should fix it.
 
 ---
 
