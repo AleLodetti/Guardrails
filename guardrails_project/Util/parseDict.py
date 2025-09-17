@@ -1,6 +1,5 @@
 import re
 
-
 class ParseDict:
     def __init__(self):
         pass

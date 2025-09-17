@@ -29,8 +29,8 @@ class Llama_chat(BaseLLM):
             "version": "3.0",
             "description": "Llama chat model for generating text responses."
         }
-
-
+    
+    #it can be modified in the same spirit as in mistral.py
     def generate_response(self, prompt: str, max_tokens: int = 200) -> str:
         """
         Generates a response from the Llama chat model based on the input messages.

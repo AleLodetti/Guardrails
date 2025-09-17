@@ -24,10 +24,9 @@ class Llama(BaseLLM):
             "description": "Llama model for generating text responses."
         }
 
+    #it can be implemented in the same spirit as in mistral.py
     def generate_response(self, prompt: str, max_tokens: int = 100) -> str:
         """Generates a response from the Llama model based on the input messages."""
-
-        #message = f"User: {prompt}\nAssistant:"
 
         inputs = self.tokenizer(prompt, return_tensors="pt").to(next(self.model.parameters()).device)
         with torch.no_grad():

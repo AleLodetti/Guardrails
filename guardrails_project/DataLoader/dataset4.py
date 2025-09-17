@@ -3,7 +3,6 @@ from datasets import load_dataset
 import pandas as pd
 
 class ToxicChat(SuperDataset):
-    """this dataset can be filtered?"""
 
     def __init__(self):
         super().__init__()

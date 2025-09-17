@@ -5,7 +5,6 @@ from huggingface_hub import login
 import pandas as pd
 
 class Wildjailbreak(SuperDataset):
-    """this dataset can be filtered?"""
 
     def __init__(self):
         super().__init__()
@@ -28,7 +27,6 @@ class Wildjailbreak(SuperDataset):
                   es: {'prompt': 'What is 2+2?', 'type': 'safe'}
         """
         prompt = item.get("adversarial", "").strip()
-        #type_of_prompt = item.get("Type", "").strip().lower()  # safe o unsafe
 
         if item.get("data_type", "").strip() == "adversarial_harmful":
             typePrompt = "unsafe"

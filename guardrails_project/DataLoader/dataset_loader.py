@@ -40,13 +40,13 @@ class DatasetLoader:
             dataset = JailbreakV_28K() 
             return dataset
         elif choice == "3":
-            dataset = Wildjailbreak() ###
+            dataset = Wildjailbreak() 
             return dataset
         elif choice == "4":
             dataset = ToxicChat()
             return dataset
         elif choice == "5":
-            dataset = Wildguardmix() ###
+            dataset = Wildguardmix() 
             return dataset
         elif choice == "6":
             dataset = XSTest()

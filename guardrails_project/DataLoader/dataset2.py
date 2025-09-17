@@ -2,7 +2,6 @@ from guardrails_project.DataLoader.superDataset import SuperDataset
 from datasets import load_dataset
 import pandas as pd
 
-#this dataset contains only unsafe prompt
 class JailbreakV_28K(SuperDataset):
     def __init__(self):
         super().__init__()
@@ -23,7 +22,6 @@ class JailbreakV_28K(SuperDataset):
                   es: {'prompt': 'What is 2+2?', 'type': 'safe'}
         """
         prompt = item.get("redteam_query", "").strip()
-        #type_of_prompt = item.get("Type", "").strip().lower()  # safe o unsafe
 
         return {
             "prompt": prompt,

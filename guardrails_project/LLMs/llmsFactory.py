@@ -1,5 +1,3 @@
-"""sfrutta il factory pattern per creare istanze di modelli LLM."""
-
 from guardrails_project.LLMs.base_llm import BaseLLM
 from guardrails_project.LLMs.llama import Llama
 from guardrails_project.LLMs.llama_chat import Llama_chat
@@ -9,7 +7,7 @@ class LLMsFactory:
 
     @staticmethod
     def create_llm(model_name: str):
-        """Creates an instance of the specified LLM model."""
+        """Creates an instance of the specified LLM model by using the factory pattern."""
         if model_name == "llama":
             print("Creating Llama model instance...")
             llm = Llama()

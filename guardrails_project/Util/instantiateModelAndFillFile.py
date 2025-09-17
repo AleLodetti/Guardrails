@@ -43,8 +43,8 @@ def instantiateModelAndFillFile():
             exit(1) 
 
     """
-    Carica il dataset per la valutazione dei prompt. L'idea è di passare i prompt ai modelli LLM e valutarne il tipo di risposta data
-    in modo da capire se il modello ha rifiutato il prompt o meno.
+    Uploads the dataset for prompt evaluation. The idea is to pass the prompts to the LLM models and evaluate the type of response given
+    in order to understand if the model refused the prompt or not.
     """
     ds = DatasetLoader().loadDataset() #carica l'oggetto
 
@@ -52,14 +52,14 @@ def instantiateModelAndFillFile():
 
 
     """
-    Esegue il ciclo di valutazione dei prompt. Per ogni prompt, il modello LLM genera una risposta.
-    Se la risposta è una sorta di rifiuto, viene incrementato il contatore dei rifiuti.
-    Alla fine, viene stampato il numero totale di rifiuti rispetto al numero totale di prompt valutati.
+    It evaluates the evaluation cycle of the prompts. For each prompt, the LLM model generates a response.
+    If the response is a sort of refusal, the refusal counter is incremented.
+    At the end, the total number of refusals is printed compared to the total number of prompts evaluated.
     """
     refused = 0
     tot_prompts = len(dataset)
 
-    print("strarting processsing")
+    print("starting processing")
 
     responseSaver = PromptSaver(file_path=PATH_TO_RESPONSES, model_name=selected_model_name)
     responseSaver.__enter__()
@@ -72,36 +72,6 @@ def instantiateModelAndFillFile():
 
         if i >= 2000:
             break
-
-        #here I need to parse the dataset inputs: some of them are 
-        #all adversarial other are mixed. So by parsing the inputs I 
-        #can standardize them to a format like: {string - type} 
-
-        #item is the row of the dataset, with parseInput() I shall select what I need.
-        #promptAndType = DatasetLoader().parseInput(item)
-        """
-        promptAndType = ds.parseInput(item)
-        prompt = promptAndType['prompt']
-        typeOfPrompt = promptAndType['type'] #Safe Or Unsafe now.
-        
-        response = llm.generate_response(prompt, max_tokens=50)
-
-        #print("Answer:", response)
-
-        isUnsafe= CheckResponse.is_refusal(response)
-
-        data = {
-            "prompt": prompt,
-            "model_response": response,
-            #it is true if the method is_refusal detected that the llm refused to generate a response, it is false if the method detected that the llm hasn't refused to generate the response
-            "isUnsafe": isUnsafe, 
-            "type": typeOfPrompt
-
-        }
-        """
-
-        #mettere un controllo piu efficiente sui prompt passati: invece che passarne solo alcuni li passi tutti 
-        #ma fai in modo da non mandare in overflow o quello che è la GPU. Tipo valuti in quanti token viene frammentata una frase
 
         promptAndType = ds.parseInput(item)
 
@@ -131,14 +101,14 @@ def instantiateModelAndFillFile():
                     data = {
                             "prompt": promptBatch[k],
                             "model_response": r,
-                            #it is true if the method is_refusal detected that the llm refused to generate a response, it is false if the method detected that the llm hasn't refused to generate the response
+                            #it is true if the method is_refusal detected that the llm refused to generate a response, it is false if the method detected that the llm hasn't 
+                            #refused to generate the response
                             "isUnsafe": isUnsafe, 
                             "type": typeBatch[k]
 
                     }
                     responseSaver.saveOnJsonFile(file_path=PATH_TO_RESPONSES, data=data, model_name=selected_model_name)
                 
-                #responseSaver.saveOnJsonFile(data = data)
                 print(f"{i} prompts processed so far.")
                 promptBatch = []
                 typeBatch = [] 
@@ -153,24 +123,22 @@ def instantiateModelAndFillFile():
 
                 if (residual_token <=0 or i == tot_prompts - 1):
                     print(f"ready to generate at {i} with residual_token: {residual_token}")
-                    #print(f"prompt: {prompt}")
                     responses = llm.generate_response(promptBatch)
 
                     for k, r in enumerate(responses):
                         r = responses[k]
-                        #isUnsafe= CheckResponse.is_refusal(r)
                         isUnsafe = is_refusal(r)
                         data = {
                                 "prompt": promptBatch[k],
                                 "model_response": r,
-                                #it is true if the method is_refusal detected that the llm refused to generate a response, it is false if the method detected that the llm hasn't refused to generate the response
-                                "isUnsafe": isUnsafe, 
+                                #it is true if the method is_refusal detected that the llm refused to generate a response, it is false 
+                                #if the method detected that the llm hasn't refused to generate the response
+                                "isUnsafe": isUnsafe,
                                 "type": typeBatch[k]
 
                         }
                         responseSaver.saveOnJsonFile(file_path=PATH_TO_RESPONSES, data=data, model_name=selected_model_name)
                     
-                    #responseSaver.saveOnJsonFile(data = data)
                     print(f"{i} prompts processed so far.")
                     promptBatch = []
                     typeBatch = [] 

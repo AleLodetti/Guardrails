@@ -56,7 +56,7 @@ class LlamaGuard(BaseGuard):
                     pad_token_id=self.tokenizer.eos_token_id
                 )
 
-            # Decodifica dell'output del classificatore
+        # Decode the output of the classificator
         raw_output = self.tokenizer.decode(output[0][inputs['input_ids'].shape[-1]:], skip_special_tokens=True)
         status, category, reason = self.parseRawOutput(raw_output) 
 
@@ -77,7 +77,7 @@ class LlamaGuard(BaseGuard):
         Returns:
             list[dict]: List of validation results.
         """
-        # Applica il chat template a tutti i messaggi
+        # It applies the same chat template to all chats
         prompts = [
             self.tokenizer.apply_chat_template(chat, tokenize=False, add_generation_prompt=True)
             for chat in chats
@@ -88,7 +88,6 @@ class LlamaGuard(BaseGuard):
             prompts, 
             return_tensors="pt", 
             padding=True,
-            #truncation=True
         ).to(self.model.device)
 
         with torch.no_grad():
@@ -101,7 +100,6 @@ class LlamaGuard(BaseGuard):
 
         results = []
         for i, output in enumerate(outputs):
-            # Prendi solo la parte generata
             generated_tokens = output[inputs['input_ids'].shape[-1]:]
             if generated_tokens.numel() == 0:
                 raw_output = ""
@@ -125,7 +123,6 @@ class LlamaGuard(BaseGuard):
 
     def parseRawOutput(self, raw_output: str):
         raw_output = raw_output.strip()
-        # Prova a dividere per newline
         lines = raw_output.split("\n")
 
         status = lines[0].strip().lower()  # prima riga → "safe" o "unsafe"

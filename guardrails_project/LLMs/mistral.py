@@ -35,30 +35,15 @@ class Mistral(BaseLLM):
         }
 
     def generate_response(self, prompts: List[str], max_tokens: int = 30) -> List[str]:
-    #def generate_response(self, prompt: str, max_tokens: int = 50):
         """
         Generate text based on the input prompt.
         Args:
-            prompt (str): The input text to generate a response for.
+            prompts (List[str]): The input texts to generate responses for.
             max_tokens (int): The maximum number of tokens to generate.
         Returns:
-            str: The generated text response.
+            List[str]: The generated text responses.
         """
-        """
-        inputs = self.tokenizer(prompt, return_tensors="pt").to(next(self.model.parameters()).device)
-        with torch.no_grad():
-            outputs = self.model.generate(
-                **inputs,
-                max_new_tokens=max_tokens,
-                do_sample=True,
-                temperature=0.7,
-                top_p=0.9,
-                repetition_penalty=1.2,
-                pad_token_id=self.tokenizer.pad_token_id 
-            )
-        text = self.tokenizer.decode(outputs[0], skip_special_tokens=True)
-        return text.strip()
-        """
+        
         inputs = self.tokenizer(prompts, return_tensors="pt", padding=True).to(next(self.model.parameters()).device)
         with torch.no_grad():
             outputs = self.model.generate(

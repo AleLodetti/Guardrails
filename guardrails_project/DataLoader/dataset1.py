@@ -23,7 +23,6 @@ class JailbreakBenchBadDataset(SuperDataset):
                   es: {'prompt': 'What is 2+2?', 'type': 'safe'}
         """
         prompt = item.get("Goal", "").strip()
-        #type_of_prompt = item.get("Type", "").strip().lower()  # safe o unsafe
 
         return {
             "prompt": prompt,
@@ -51,7 +50,6 @@ class JailbreakBenchGoodDataset(SuperDataset):
                   es: {'prompt': 'What is 2+2?', 'type': 'safe'}
         """
         prompt = item.get("Goal", "").strip()
-        #type_of_prompt = item.get("Type", "").strip().lower()  # safe o unsafe
 
         return {
             "prompt": prompt,

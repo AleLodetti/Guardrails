@@ -3,8 +3,8 @@ from guardrails_project.LLMs.base import Base
 
 class BaseGuard(Base):
     """
-    Questa classe è la classe astratta per i guardrail e definisce un nuovo
-    metodo chaiamto validate_response()
+    This class is the abstract class for guardrails and defines a new
+    method called validate_response().
     """
 
     def __init__(self):

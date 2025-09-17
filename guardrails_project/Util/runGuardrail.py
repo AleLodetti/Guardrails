@@ -78,39 +78,7 @@ def runGuardrail(choice):
     resultSaver = PromptSaver(file_path = PATH_TO_RESULTS, model_name = selected_guardrail_name)
     resultSaver.__enter__()
     
-    """
-    i = 0
-    while True:
-        data = promptReader.getNextDict()
-        if data is not None:
-            i = i + 1
-        #la valuto con LlamaGuard
-            chat = ParseDict().parser(selected_guardrail_name, selected_model_name, data)
-            final_response = guardrail.validate_response(chat)
-
-                #if isUnsafe == true it means that the LLM modify the 
-                # answer to make it safe ergo: the LLM detected the
-                # unsafeness of the prompt; else it considered it safe.
-                if data["isUnsafe"] is True:
-                    originalDetection = "unsafe"
-                else:
-                    originalDetection = "safe"
-
-            result = {
-                "originalDetection": originalDetection,
-                "guardrailDetection":final_response["status"],
-                "groundTruth": data["type"] 
-            }
-            #PromptSaver.saveResponseOnJsonl(PATH_TO_RESULTS, result, selected_guardrail_name)
-            resultSaver.saveResponseOnJsonl(result)
-            if i == 20:
-                i = 0
-                print("other 20 prompts have been processed")
-        else:
-            print("No more responses to evaluate.")
-            break
-    """
-    batch_size = 4
+    #some useful variables
     max_token = 4500
     batch_chats = []
     batch_data = []
@@ -132,10 +100,10 @@ def runGuardrail(choice):
             print("No more responses to evaluate.")
             break
 
-        # prepara la chat per LlamaGuard
+        # it prepares the chat for llamaguard
         chat = ParseDict().parser(selected_guardrail_name, selected_model_name, data)
         
-        #controllo i token
+        #checks the number of tokens, to avoide exceeding the limit of the GPU.
         template = guardrail.getTokenizer().apply_chat_template(
             chat,
             tokenize=False,
@@ -168,7 +136,7 @@ def runGuardrail(choice):
         max_token = prospect
         i += 1
 
-        # processa il batch se pieno
+        # It processes the batch whether is full.
         if max_token <= 0 and prospect >= -700:
             results = guardrail.validate_responses(batch_chats)
             for res, d in zip(results, batch_data):

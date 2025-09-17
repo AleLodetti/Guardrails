@@ -1,3 +1,5 @@
+#this class is useless, there are other classes for the same purpose
+
 import os
 from guardrails_project import constants
 from guardrails_project.Guardrails.llamaGuard import LlamaGuard

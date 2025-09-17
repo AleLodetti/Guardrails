@@ -1,21 +1,15 @@
 from guardrails_project.DataLoader.superDataset import SuperDataset
 from datasets import load_dataset, concatenate_datasets
-import pandas as pd
 
 class CSVfile(SuperDataset):
-    """this dataset can be filtered?"""
 
     def __init__(self):
         super().__init__()
     
     def loadData(self):
-        #ds1 = load_dataset('TrustAIRLab/in-the-wild-jailbreak-prompts', 'jailbreak_2023_05_07', split='train')
-        #ds2 = load_dataset('TrustAIRLab/in-the-wild-jailbreak-prompts', 'jailbreak_2023_12_25', split='train')
-        ds3 = load_dataset('TrustAIRLab/in-the-wild-jailbreak-prompts', 'regular_2023_12_25', split='train')
+        ds = load_dataset('TrustAIRLab/in-the-wild-jailbreak-prompts', 'regular_2023_12_25', split='train')
 
-        #combined = concatenate_datasets([ds1, ds2, ds3])
-
-        return ds3
+        return ds
 
     def parseInput(self, item: dict) -> dict:
         """
@@ -30,7 +24,6 @@ class CSVfile(SuperDataset):
                   es: {'prompt': 'What is 2+2?', 'type': 'safe'}
         """
         prompt = item.get("prompt", "").strip()
-        #type_of_prompt = item.get("Type", "").strip().lower()  # safe o unsafe
 
         if item.get("jailbreak", "") == True:
             typePrompt = "unsafe"

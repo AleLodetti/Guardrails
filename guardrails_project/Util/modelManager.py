@@ -6,9 +6,6 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 from guardrails_project.Guardrails.llamaGuard import LlamaGuard
 from guardrails_project.LLMs.llmsFactory import LLMsFactory
 
-#con llama guard dovrebbe cambiare, soprattutto per il caricamente dove si usa
-#AutoModelForSequenceClassification...
-
 def saveModel(model):
     """
     Save the model

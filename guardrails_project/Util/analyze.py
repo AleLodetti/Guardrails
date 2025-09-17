@@ -78,7 +78,9 @@ def analyzeMetrics():
     f1_llm = f1_score(true_labels, predicted_labels_llm)
     f1_guard = f1_score(true_labels, predicted_labels_guard)
 
+    #-------------------------------
     #print them
+    #-------------------------------
 
     with open("metrics.txt", "a") as f:
         f.write(f"Evaluation metrics, for {selected_model_name}\n")
