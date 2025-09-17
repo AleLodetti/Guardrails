@@ -90,7 +90,7 @@ pip install torch torchvision torchaudio --index-url https://download.pytorch.or
 pip install -r requirments-gpu.txt
 ```
 
- # ▶️ Esecuzione
+ # ▶️ Execution
 To execute the project, type the following:
  ```bash
  python -m main
