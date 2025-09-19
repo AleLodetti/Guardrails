@@ -54,7 +54,7 @@ class Llama(BaseLLM):
         print("Loading Llama model...")
         try:
             MODEL = "meta-llama/Llama-3.1-8B"
-            token= "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"
+            token= TOKEN
 
             model_configs = {
                 'torch_dtype': 'bfloat16',

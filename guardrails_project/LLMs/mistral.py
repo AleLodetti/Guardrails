@@ -78,7 +78,7 @@ class Mistral(BaseLLM):
             model: The Mistral model instance.
         """
         MODEL = 'mistralai/Mistral-7B-v0.3'
-        token = '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'
+        token = TOKEN
 
         model_configs = {
             'torch_dtype': 'bfloat16',
