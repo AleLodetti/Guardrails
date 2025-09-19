@@ -11,15 +11,14 @@ class JailbreakV_28K(SuperDataset):
 
     def parseInput(self, item: dict) -> dict:
         """
-        Estrae il prompt e il tipo (es. 'safe' o 'unsafe') da un item del dataset.
+        It retrieves the prompt and its type (e.g., 'safe' or 'unsafe') from a dataset item.
 
         Args:
-            item (dict): Un dizionario che rappresenta un esempio del dataset,
-                         ad esempio: {"Goal": "...", "Type": "safe"}
-
+            item (dict): A dictionary representing a dataset example,
+                         e.g., {"Goal": "...", "Type": "safe"}  
         Returns:
-            dict: Un dizionario con le chiavi 'prompt' e 'type'
-                  es: {'prompt': 'What is 2+2?', 'type': 'safe'}
+            dict: A dictionary with keys 'prompt' and 'type'
+                  e.g., {'prompt': 'What is 2+2?', 'type': 'safe'}
         """
         prompt = item.get("redteam_query", "").strip()
 
